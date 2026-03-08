@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ProductService } from '@/service/ProductService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
@@ -14,7 +14,7 @@ const products = ref();
 const productDialog = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
-const product = ref({});
+const product = ref<any>({});
 const selectedProducts = ref();
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS }
@@ -26,7 +26,7 @@ const statuses = ref([
     { label: 'OUTOFSTOCK', value: 'outofstock' }
 ]);
 
-function formatCurrency(value) {
+function formatCurrency(value: number) {
     if (value) return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     return;
 }
@@ -64,24 +64,24 @@ function saveProduct() {
     }
 }
 
-function editProduct(prod) {
+function editProduct(prod: any) {
     product.value = { ...prod };
     productDialog.value = true;
 }
 
-function confirmDeleteProduct(prod) {
+function confirmDeleteProduct(prod: any) {
     product.value = prod;
     deleteProductDialog.value = true;
 }
 
 function deleteProduct() {
-    products.value = products.value.filter((val) => val.id !== product.value.id);
+    products.value = products.value.filter((val: any) => val.id !== product.value.id);
     deleteProductDialog.value = false;
     product.value = {};
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
 }
 
-function findIndexById(id) {
+function findIndexById(id: string) {
     let index = -1;
     for (let i = 0; i < products.value.length; i++) {
         if (products.value[i].id === id) {
@@ -111,13 +111,13 @@ function confirmDeleteSelected() {
 }
 
 function deleteSelectedProducts() {
-    products.value = products.value.filter((val) => !selectedProducts.value.includes(val));
+    products.value = products.value.filter((val: any) => !selectedProducts.value.includes(val));
     deleteProductsDialog.value = false;
     selectedProducts.value = null;
     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
 }
 
-function getStatusLabel(status) {
+function getStatusLabel(status: string): string | undefined {
     switch (status) {
         case 'INSTOCK':
             return 'success';
@@ -129,7 +129,7 @@ function getStatusLabel(status) {
             return 'danger';
 
         default:
-            return null;
+            return undefined;
     }
 }
 </script>
@@ -144,7 +144,7 @@ function getStatusLabel(status) {
                 </template>
 
                 <template #end>
-                    <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV($event)" />
+                    <Button label="Export" icon="pi pi-upload" severity="secondary" @click="exportCSV()" />
                 </template>
             </Toolbar>
 

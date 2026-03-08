@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { ProductService } from '@/service/ProductService';
 import { onMounted, ref } from 'vue';
 
-const products = ref(null);
+const products = ref<any[] | null>(null);
 
-function formatCurrency(value) {
+function formatCurrency(value: number) {
     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 }
 

@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { ProductService } from '@/service/ProductService';
 import { onMounted, ref } from 'vue';
 
-const products = ref(null);
-const picklistProducts = ref(null);
-const orderlistProducts = ref(null);
+const products = ref<any[] | null>(null);
+const picklistProducts = ref<any[][] | undefined>(undefined);
+const orderlistProducts = ref<any[] | undefined>(undefined);
 const options = ref(['list', 'grid']);
 const layout = ref('list');
 
@@ -16,7 +16,7 @@ onMounted(() => {
     });
 });
 
-function getSeverity(product) {
+function getSeverity(product: any): string | undefined {
     switch (product.inventoryStatus) {
         case 'INSTOCK':
             return 'success';
@@ -28,7 +28,7 @@ function getSeverity(product) {
             return 'danger';
 
         default:
-            return null;
+            return undefined;
     }
 }
 </script>

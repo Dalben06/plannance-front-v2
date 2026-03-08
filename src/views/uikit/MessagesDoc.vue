@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { useToast } from 'primevue/usetoast';
 import { ref } from 'vue';
 
 const toast = useToast();
-const message = ref([]);
+const message = ref<{ severity: string; content: string }[]>([]);
 const username = ref(null);
 const email = ref(null);
 

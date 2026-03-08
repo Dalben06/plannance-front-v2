@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 
-const menu = ref(null);
-const contextMenu = ref(null);
+const menu = ref<{ toggle: (event: Event) => void } | null>(null);
+const contextMenu = ref<{ show: (event: Event) => void } | null>(null);
 
 const nestedMenuitems = ref([
     {
@@ -412,12 +412,12 @@ const panelMenuitems = ref([
     }
 ]);
 
-function toggleMenu(event) {
-    menu.value.toggle(event);
+function toggleMenu(event: Event) {
+    menu.value?.toggle(event);
 }
 
-function onContextRightClick(event) {
-    contextMenu.value.show(event);
+function onContextRightClick(event: Event) {
+    contextMenu.value?.show(event);
 }
 </script>
 

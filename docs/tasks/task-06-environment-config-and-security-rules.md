@@ -1,6 +1,7 @@
 # Task 09 – Environment Configuration and Security Rules
 
 ## Objective
+
 Create a safe and scalable environment configuration strategy for the project using `.env` files, typed access, and security best practices.
 
 ---
@@ -17,6 +18,7 @@ Recommended files:
 ```
 
 Purpose:
+
 - `.env`: shared local defaults
 - `.env.development`: local development overrides
 - `.env.production`: production values managed by deployment platform
@@ -35,6 +37,7 @@ VITE_ENABLE_DEBUG=true
 ```
 
 Important:
+
 - Only expose variables prefixed with `VITE_` to the frontend
 - Never place real secrets inside `.env.example`
 
@@ -70,19 +73,19 @@ src/config/env.ts
 Example:
 
 ```ts
-const requiredEnv = ['VITE_API_BASE_URL'] as const
+const requiredEnv = ['VITE_API_BASE_URL'] as const;
 
 for (const key of requiredEnv) {
-  if (!import.meta.env[key]) {
-    throw new Error(`Missing required environment variable: ${key}`)
-  }
+    if (!import.meta.env[key]) {
+        throw new Error(`Missing required environment variable: ${key}`);
+    }
 }
 
 export const env = {
-  appName: import.meta.env.VITE_APP_NAME || 'Plannance',
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
-  enableDebug: import.meta.env.VITE_ENABLE_DEBUG === 'true'
-}
+    appName: import.meta.env.VITE_APP_NAME || 'Plannance',
+    apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
+    enableDebug: import.meta.env.VITE_ENABLE_DEBUG === 'true'
+};
 ```
 
 This centralizes environment access and avoids scattered `import.meta.env` usage.
@@ -103,13 +106,13 @@ Example:
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_APP_NAME?: string
-  readonly VITE_API_BASE_URL: string
-  readonly VITE_ENABLE_DEBUG?: string
+    readonly VITE_APP_NAME?: string;
+    readonly VITE_API_BASE_URL: string;
+    readonly VITE_ENABLE_DEBUG?: string;
 }
 
 interface ImportMeta {
-  readonly env: ImportMetaEnv
+    readonly env: ImportMetaEnv;
 }
 ```
 
@@ -120,15 +123,18 @@ This gives TypeScript support for environment variables.
 ## Step 6 – Separate Public and Secret Values
 
 Frontend rule:
+
 - only public configuration goes into `VITE_*` variables
 
 Examples of allowed frontend variables:
+
 - app name
 - API base URL
 - feature flags
 - public analytics IDs
 
 Examples that must never be exposed in the frontend:
+
 - database passwords
 - private API keys
 - JWT secrets
@@ -149,21 +155,21 @@ npm install zod
 Example with Zod:
 
 ```ts
-import { z } from 'zod'
+import { z } from 'zod';
 
 const envSchema = z.object({
-  VITE_APP_NAME: z.string().optional(),
-  VITE_API_BASE_URL: z.string().url(),
-  VITE_ENABLE_DEBUG: z.enum(['true', 'false']).optional()
-})
+    VITE_APP_NAME: z.string().optional(),
+    VITE_API_BASE_URL: z.string().url(),
+    VITE_ENABLE_DEBUG: z.enum(['true', 'false']).optional()
+});
 
-const parsedEnv = envSchema.parse(import.meta.env)
+const parsedEnv = envSchema.parse(import.meta.env);
 
 export const env = {
-  appName: parsedEnv.VITE_APP_NAME ?? 'Plannance',
-  apiBaseUrl: parsedEnv.VITE_API_BASE_URL,
-  enableDebug: parsedEnv.VITE_ENABLE_DEBUG === 'true'
-}
+    appName: parsedEnv.VITE_APP_NAME ?? 'Plannance',
+    apiBaseUrl: parsedEnv.VITE_API_BASE_URL,
+    enableDebug: parsedEnv.VITE_ENABLE_DEBUG === 'true'
+};
 ```
 
 This prevents invalid environment values from going unnoticed.
@@ -183,9 +189,9 @@ Example:
 
 ```ts
 export const features = {
-  dashboard: import.meta.env.VITE_ENABLE_DASHBOARD === 'true',
-  notifications: import.meta.env.VITE_ENABLE_NOTIFICATIONS === 'true'
-}
+    dashboard: import.meta.env.VITE_ENABLE_DASHBOARD === 'true',
+    notifications: import.meta.env.VITE_ENABLE_NOTIFICATIONS === 'true'
+};
 ```
 
 This helps enable or disable features without editing application logic.
@@ -195,6 +201,7 @@ This helps enable or disable features without editing application logic.
 ## Step 9 – Define Security Rules
 
 Project security rules:
+
 - never commit real secrets
 - never expose backend secrets to the frontend
 - never log sensitive environment values in the browser console

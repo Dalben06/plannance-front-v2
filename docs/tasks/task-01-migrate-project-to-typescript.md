@@ -5,23 +5,23 @@
 Convert the existing Vue project template from JavaScript to TypeScript
 while keeping the current functionality intact.
 
-------------------------------------------------------------------------
+---
 
 ## Step 1 -- Install TypeScript Dependencies
 
 Run the following command:
 
-``` bash
+```bash
 npm install -D typescript @vue/tsconfig vue-tsc
 ```
 
 Optional but recommended:
 
-``` bash
+```bash
 npm install -D @types/node
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Step 2 -- Create the TypeScript Configuration
 
@@ -31,25 +31,21 @@ Create a file called:
 
 Example configuration:
 
-``` json
+```json
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "compilerOptions": {
-    "strict": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
-  ]
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "compilerOptions": {
+        "strict": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        }
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
 }
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Step 3 -- Add Vue Type Support
 
@@ -57,11 +53,11 @@ Create the file:
 
     env.d.ts
 
-``` ts
+```ts
 /// <reference types="vite/client" />
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Step 4 -- Convert JavaScript Files
 
@@ -75,37 +71,35 @@ Example:
     router.js → router.ts
     store.js → store.ts
 
-------------------------------------------------------------------------
+---
 
 ## Step 5 -- Update Vue Components
 
 Inside Vue components:
 
-``` vue
-<script setup lang="ts">
-</script>
+```vue
+<script setup lang="ts"></script>
 ```
 
 or
 
-``` vue
-<script lang="ts">
-</script>
+```vue
+<script lang="ts"></script>
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Step 6 -- Validate TypeScript
 
 Run:
 
-``` bash
+```bash
 npx vue-tsc --noEmit
 ```
 
 This checks types without generating files.
 
-------------------------------------------------------------------------
+---
 
 ## Expected Result
 

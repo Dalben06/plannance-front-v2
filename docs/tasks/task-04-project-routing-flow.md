@@ -5,15 +5,15 @@
 Organize the project navigation flow with Landing Page → Login →
 Dashboard.
 
-------------------------------------------------------------------------
+---
 
 ## Step 1 -- Install Router
 
-``` bash
+```bash
 npm install vue-router
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Step 2 -- Create Router Structure
 
@@ -21,47 +21,47 @@ npm install vue-router
     index.ts
     routes.ts
 
-------------------------------------------------------------------------
+---
 
 ## Step 3 -- Define Routes
 
 Example `routes.ts`:
 
-``` ts
+```ts
 export const routes = [
-  {
-    path: '/',
-    name: 'Landing',
-    component: () => import('@/views/Landing.vue')
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('@/views/Login.vue')
-  },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: () => import('@/views/Dashboard.vue')
-  }
-]
+    {
+        path: '/',
+        name: 'Landing',
+        component: () => import('@/views/Landing.vue')
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: () => import('@/views/Login.vue')
+    },
+    {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/Dashboard.vue')
+    }
+];
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Step 4 -- Router Initialization
 
-``` ts
-import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from './routes'
+```ts
+import { createRouter, createWebHistory } from 'vue-router';
+import { routes } from './routes';
 
 export const router = createRouter({
-  history: createWebHistory(),
-  routes
-})
+    history: createWebHistory(),
+    routes
+});
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Step 5 -- Navigation Flow
 
@@ -88,25 +88,25 @@ Dashboard:
 
 • Main application interface
 
-------------------------------------------------------------------------
+---
 
 ## Step 6 -- Optional Route Guards
 
 Example authentication guard:
 
-``` ts
+```ts
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = false
+    const isAuthenticated = false;
 
-  if (to.name === 'Dashboard' && !isAuthenticated) {
-    next('/login')
-  } else {
-    next()
-  }
-})
+    if (to.name === 'Dashboard' && !isAuthenticated) {
+        next('/login');
+    } else {
+        next();
+    }
+});
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Expected Result
 

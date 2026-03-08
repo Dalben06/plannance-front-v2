@@ -1,6 +1,7 @@
 # Task 05 – Setup Husky and lint-staged Pre-commit Hooks
 
 ## Objective
+
 Configure automated Git hooks to validate code quality before every commit and keep the repository clean and consistent.
 
 ---
@@ -35,9 +36,9 @@ In `package.json`, make sure you have:
 
 ```json
 {
-  "scripts": {
-    "prepare": "husky"
-  }
+    "scripts": {
+        "prepare": "husky"
+    }
 }
 ```
 
@@ -51,15 +52,10 @@ In `package.json`, add:
 
 ```json
 {
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx,vue}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,css,scss}": [
-      "prettier --write"
-    ]
-  }
+    "lint-staged": {
+        "*.{ts,tsx,js,jsx,vue}": ["eslint --fix", "prettier --write"],
+        "*.{json,md,css,scss}": ["prettier --write"]
+    }
 }
 ```
 
@@ -102,9 +98,9 @@ And add this script to `package.json`:
 
 ```json
 {
-  "scripts": {
-    "type-check": "vue-tsc --noEmit"
-  }
+    "scripts": {
+        "type-check": "vue-tsc --noEmit"
+    }
 }
 ```
 
@@ -147,6 +143,7 @@ Do not include scripts that read, print, or validate secret values inside files 
 Hooks should validate code quality, not expose secret configuration.
 
 Recommended rule:
+
 - lint source files
 - format source files
 - type-check source files
@@ -164,6 +161,7 @@ git commit -m "test hooks"
 ```
 
 Expected behavior:
+
 - ESLint fixes issues automatically when possible
 - Prettier formats staged files
 - Commit fails if there are blocking errors

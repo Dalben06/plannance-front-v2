@@ -5,15 +5,15 @@
 Add linting and formatting tools to enforce consistent code quality
 across the project.
 
-------------------------------------------------------------------------
+---
 
 ## Step 1 -- Install Dependencies
 
-``` bash
+```bash
 npm install -D eslint prettier eslint-plugin-vue @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-config-prettier eslint-plugin-prettier
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Step 2 -- Create ESLint Configuration
 
@@ -23,30 +23,25 @@ Create:
 
 Example:
 
-``` js
+```js
 module.exports = {
-  root: true,
-  env: {
-    browser: true,
-    node: true
-  },
-  parser: "vue-eslint-parser",
-  parserOptions: {
-    parser: "@typescript-eslint/parser",
-    ecmaVersion: 2022,
-    sourceType: "module"
-  },
-  extends: [
-    "eslint:recommended",
-    "plugin:vue/vue3-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
-  ],
-  rules: {}
-}
+    root: true,
+    env: {
+        browser: true,
+        node: true
+    },
+    parser: 'vue-eslint-parser',
+    parserOptions: {
+        parser: '@typescript-eslint/parser',
+        ecmaVersion: 2022,
+        sourceType: 'module'
+    },
+    extends: ['eslint:recommended', 'plugin:vue/vue3-recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
+    rules: {}
+};
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Step 3 -- Create Prettier Configuration
 
@@ -56,38 +51,38 @@ Create:
 
 Example:
 
-``` json
+```json
 {
-  "semi": false,
-  "singleQuote": true,
-  "trailingComma": "none",
-  "printWidth": 100
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "printWidth": 100
 }
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Step 4 -- Add Scripts
 
 In `package.json`:
 
-``` json
+```json
 "scripts": {
   "lint": "eslint . --ext .ts,.vue",
   "format": "prettier --write ."
 }
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Step 5 -- Run Lint and Format
 
-``` bash
+```bash
 npm run lint
 npm run format
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Expected Result
 

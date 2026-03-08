@@ -25,14 +25,14 @@ This is a Vue 3 SPA admin dashboard built on the **Sakai** template with **Prime
 
 ### Key layers
 
-| Directory | Role |
-|-----------|------|
-| `src/layout/` | Shell components: `AppLayout.vue` wraps sidebar, topbar, footer. Layout state (sidebar visibility, dark mode, etc.) lives in `layout/composables/layout.js` — a composable shared across layout components. |
-| `src/views/` | Page-level components, lazy-loaded via Vue Router. Subdirs: `pages/` (auth, CRUD, landing), `uikit/` (PrimeVue component docs), `utilities/`. |
-| `src/components/` | Reusable widgets — `dashboard/` for stats/charts/sales widgets, `landing/` for the public landing page sections. |
-| `src/router/index.js` | All route definitions with lazy imports. Routes under `/` use `AppLayout`, auth pages are standalone. |
-| `src/service/` | Mock data services (`ProductService`, `CustomerService`, etc.) — currently demo-only, not connected to a real API. |
-| `src/assets/` | Global styles: `tailwind.css`, `styles.scss`, and per-section SCSS partials under `assets/layout/`. |
+| Directory             | Role                                                                                                                                                                                                        |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/layout/`         | Shell components: `AppLayout.vue` wraps sidebar, topbar, footer. Layout state (sidebar visibility, dark mode, etc.) lives in `layout/composables/layout.js` — a composable shared across layout components. |
+| `src/views/`          | Page-level components, lazy-loaded via Vue Router. Subdirs: `pages/` (auth, CRUD, landing), `uikit/` (PrimeVue component docs), `utilities/`.                                                               |
+| `src/components/`     | Reusable widgets — `dashboard/` for stats/charts/sales widgets, `landing/` for the public landing page sections.                                                                                            |
+| `src/router/index.js` | All route definitions with lazy imports. Routes under `/` use `AppLayout`, auth pages are standalone.                                                                                                       |
+| `src/service/`        | Mock data services (`ProductService`, `CustomerService`, etc.) — currently demo-only, not connected to a real API.                                                                                          |
+| `src/assets/`         | Global styles: `tailwind.css`, `styles.scss`, and per-section SCSS partials under `assets/layout/`.                                                                                                         |
 
 ### Theming
 

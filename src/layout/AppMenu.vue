@@ -24,7 +24,12 @@ const model = ref<MenuItem[]>([
             {
                 label: 'Dashboard',
                 icon: 'pi pi-fw pi-home',
-                to: '/'
+                to: '/home'
+            },
+            {
+                label: 'Calendar',
+                icon: 'pi pi-fw pi-calendar',
+                to: '/home/calendar'
             }
         ]
     },

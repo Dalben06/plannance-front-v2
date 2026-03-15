@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { env } from '@/config/env';
 import { ref } from 'vue';
 import AppMenuItem from './AppMenuItem.vue';
 
@@ -17,22 +18,7 @@ interface MenuItem {
     command?: (event: any) => void;
 }
 
-const model = ref<MenuItem[]>([
-    {
-        label: 'Home',
-        items: [
-            {
-                label: 'Dashboard',
-                icon: 'pi pi-fw pi-home',
-                to: '/home'
-            },
-            {
-                label: 'Calendar',
-                icon: 'pi pi-fw pi-calendar',
-                to: '/home/calendar'
-            }
-        ]
-    },
+const debugItems = [
     {
         label: 'UI Components',
         path: '/uikit',
@@ -276,6 +262,24 @@ const model = ref<MenuItem[]>([
             }
         ]
     }
+];
+const model = ref<MenuItem[]>([
+    {
+        label: 'Home',
+        items: [
+            {
+                label: 'Dashboard',
+                icon: 'pi pi-fw pi-home',
+                to: '/home'
+            },
+            {
+                label: 'Calendar',
+                icon: 'pi pi-fw pi-calendar',
+                to: '/home/calendar'
+            }
+        ]
+    },
+    ...(env.enableDebug ? debugItems : [])
 ]);
 </script>
 

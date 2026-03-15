@@ -1,8 +1,36 @@
 <script setup lang="ts">
 import { useLayout } from '@/layout/composables/layout';
+import router from '@/router';
+import { useAuthStore } from '@/stores/auth';
+import { ref } from 'vue';
 import AppConfigurator from './AppConfigurator.vue';
 
 const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
+const profileMenu = ref<{ toggle: (event: Event) => void } | null>(null);
+const auth = useAuthStore();
+const menuItems = [
+    {
+        label: 'Profile',
+        items: [
+            {
+                label: 'Settings',
+                icon: 'pi pi-cog'
+            },
+            {
+                label: 'Logout',
+                icon: 'pi pi-sign-out',
+                command: async () => {
+                    auth.logout();
+                    await router.push({ path: '/home' });
+                }
+            }
+        ]
+    }
+];
+
+function toggleProfileMenu(event: Event) {
+    profileMenu.value?.toggle(event);
+}
 </script>
 
 <template>
@@ -11,7 +39,7 @@ const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
             <button class="layout-menu-button layout-topbar-action" @click="toggleMenu">
                 <i class="pi pi-bars"></i>
             </button>
-            <router-link to="/" class="layout-topbar-logo">
+            <router-link to="/home" class="layout-topbar-logo">
                 <img src="/plannance.svg" alt="" srcset="" class="m-8 w-8 shrink-0 mx-auto" />
                 <span>Plannance</span>
             </router-link>
@@ -43,18 +71,15 @@ const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
+                    <router-link type="button" class="layout-topbar-action" to="/home/calendar">
                         <i class="pi pi-calendar"></i>
                         <span>Calendar</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-inbox"></i>
-                        <span>Messages</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
+                    </router-link>
+                    <button type="button" class="layout-topbar-action" @click="toggleProfileMenu">
                         <i class="pi pi-user"></i>
                         <span>Profile</span>
                     </button>
+                    <Menu ref="profileMenu" :model="menuItems" :popup="true" />
                 </div>
             </div>
         </div>

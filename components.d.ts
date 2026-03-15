@@ -43,6 +43,7 @@ declare module 'vue' {
     Fluid: typeof import('primevue/fluid')['default']
     FooterWidget: typeof import('./src/components/landing/FooterWidget.vue')['default']
     Galleria: typeof import('primevue/galleria')['default']
+    GoogleAuth: typeof import('./src/components/auth/GoogleAuth.vue')['default']
     HeroWidget: typeof import('./src/components/landing/HeroWidget.vue')['default']
     HighlightsWidget: typeof import('./src/components/landing/HighlightsWidget.vue')['default']
     IconField: typeof import('primevue/iconfield')['default']

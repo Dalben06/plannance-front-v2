@@ -7,8 +7,9 @@ import PrimeVue from 'primevue/config';
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 
-import '@/assets/tailwind.css';
 import '@/assets/styles.scss';
+import '@/assets/tailwind.css';
+import { createPinia } from 'pinia';
 
 const app = createApp(App);
 
@@ -21,6 +22,7 @@ app.use(PrimeVue, {
         }
     }
 });
+app.use(createPinia());
 app.use(ToastService);
 app.use(ConfirmationService);
 

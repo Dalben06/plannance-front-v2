@@ -86,11 +86,3 @@
         </div>
     </div>
 </template>
-
-<style scoped>
-/* REDESIGN: dark mode hero background override — inline gradient is light-only */
-:global(.app-dark) #hero {
-    background: radial-gradient(ellipse at 80% 10%, rgba(96, 165, 250, 0.3) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(167, 139, 250, 0.3) 0%, transparent 50%), #0b1220 !important;
-    clip-path: ellipse(150% 87% at 93% 13%);
-}
-</style>

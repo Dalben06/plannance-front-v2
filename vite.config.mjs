@@ -30,9 +30,25 @@ export default defineConfig({
     test: {
         environment: 'jsdom',
         globals: true,
+        setupFiles: ['./tests/test-setup.ts'],
+        resolve: {
+            alias: {
+                '@': fileURLToPath(new URL('./src', import.meta.url)),
+                '@tests': fileURLToPath(new URL('./tests', import.meta.url))
+            }
+        },
+        env: {
+            VITE_API_BASE_URL: 'http://localhost:3000'
+        },
         coverage: {
             provider: 'v8',
-            reporter: ['text', 'html']
+            reporter: ['text', 'html'],
+            thresholds: {
+                branches: 90,
+                functions: 90,
+                lines: 90,
+                statements: 90
+            }
         }
     }
 });

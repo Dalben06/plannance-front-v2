@@ -6,9 +6,14 @@ coverage
 .cache
 .output
 .env
+.env.local
+.env.*.local
+.env.development
+.env.production
 dist
 .DS_Store
 .idea
 .eslintcache
 api-generator/typedoc.json
 **/.DS_Store
+docs/tasks

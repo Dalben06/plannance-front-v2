@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="calBody_original" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4ab06f"/>
+      <stop offset="100%" stop-color="#2d8f54"/>
+    </linearGradient>
+    <linearGradient id="calTop_original" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a6b3c"/>
+      <stop offset="100%" stop-color="#145a31"/>
+    </linearGradient>
+    <linearGradient id="arrow_original" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0c8"/>
+      <stop offset="100%" stop-color="#0fa"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Calendar body (rounded rect) -->
+  <rect x="60" y="100" width="392" height="360" rx="35" ry="35" fill="url(#calBody_original)" stroke="#145a31" stroke-width="4"/>
+  
+  <!-- Calendar top header -->
+  <rect x="60" y="100" width="392" height="110" rx="35" ry="35" fill="url(#calTop_original)"/>
+  <rect x="60" y="150" width="392" height="60" fill="url(#calTop_original)"/>
+  
+  <!-- Calendar rings -->
+  <rect x="160" y="72" width="28" height="65" rx="14" fill="#aaa"/>
+  <rect x="324" y="72" width="28" height="65" rx="14" fill="#aaa"/>
+  
+  <!-- Grid lines horizontal -->
+  <line x1="100" y1="290" x2="412" y2="290" stroke="#3d9960" stroke-width="2" opacity="0.5"/>
+  <line x1="100" y1="340" x2="412" y2="340" stroke="#3d9960" stroke-width="2" opacity="0.5"/>
+  <line x1="100" y1="390" x2="412" y2="390" stroke="#3d9960" stroke-width="2" opacity="0.5"/>
+  
+  <!-- Grid lines vertical -->
+  <line x1="162" y1="230" x2="162" y2="430" stroke="#3d9960" stroke-width="2" opacity="0.5"/>
+  <line x1="224" y1="230" x2="224" y2="430" stroke="#3d9960" stroke-width="2" opacity="0.5"/>
+  <line x1="286" y1="230" x2="286" y2="430" stroke="#3d9960" stroke-width="2" opacity="0.5"/>
+  <line x1="348" y1="230" x2="348" y2="430" stroke="#3d9960" stroke-width="2" opacity="0.5"/>
+
+  <!-- Bar chart bars (growing left to right) -->
+  <rect x="115" y="380" width="40" height="50" rx="4" fill="#1a6b3c" opacity="0.85"/>
+  <rect x="177" y="350" width="40" height="80" rx="4" fill="#1f7a43" opacity="0.85"/>
+  <rect x="239" y="310" width="40" height="120" rx="4" fill="#24894a" opacity="0.85"/>
+  <rect x="301" y="280" width="40" height="150" rx="4" fill="#2a9851" opacity="0.85"/>
+  <rect x="363" y="250" width="40" height="180" rx="4" fill="#30a758" opacity="0.85"/>
+
+  <!-- Upward arrow (curved) -->
+  <path d="M 100 410 Q 180 380, 220 340 Q 280 270, 340 260 L 420 200" 
+        fill="none" stroke="url(#arrow_original)" stroke-width="18" stroke-linecap="round"/>
+  <!-- Arrow head -->
+  <polygon points="420,170 440,210 400,215" fill="url(#arrow_original)"/>
+</svg>

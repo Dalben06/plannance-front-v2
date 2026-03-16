@@ -15,7 +15,7 @@ const loginSchema = toTypedSchema(
     })
 );
 
-const { handleSubmit: handleLoginSubmit, defineField: defineLoginField, errors: loginErrors, isSubmitting } = useForm({ validationSchema: loginSchema });
+const { handleSubmit: handleLoginSubmit, defineField: defineLoginField } = useForm({ validationSchema: loginSchema });
 
 const [loginEmail] = defineLoginField('email');
 const [loginPassword] = defineLoginField('password');

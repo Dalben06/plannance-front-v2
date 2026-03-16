@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 
 const items = ref([
@@ -21,7 +21,7 @@ const items = ref([
 
 const loading = ref([false, false, false]);
 
-function load(index) {
+function load(index: number) {
     loading.value[index] = true;
     setTimeout(() => (loading.value[index] = false), 1000);
 }

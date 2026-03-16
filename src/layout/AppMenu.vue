@@ -1,8 +1,23 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import AppMenuItem from './AppMenuItem.vue';
 
-const model = ref([
+interface MenuItem {
+    label?: string;
+    icon?: string;
+    path?: string;
+    to?: string;
+    url?: string;
+    target?: string;
+    class?: string;
+    separator?: boolean;
+    visible?: boolean;
+    disabled?: boolean;
+    items?: MenuItem[];
+    command?: (event: any) => void;
+}
+
+const model = ref<MenuItem[]>([
     {
         label: 'Home',
         items: [

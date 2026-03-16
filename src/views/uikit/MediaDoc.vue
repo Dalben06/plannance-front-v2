@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { PhotoService } from '@/service/PhotoService';
 import { ProductService } from '@/service/ProductService';
 import { onMounted, ref } from 'vue';
 
-const products = ref([]);
-const images = ref([]);
+const products = ref<any[]>([]);
+const images = ref<any[]>([]);
 const galleriaResponsiveOptions = ref([
     {
         breakpoint: '1024px',
@@ -46,7 +46,7 @@ onMounted(() => {
     PhotoService.getImages().then((data) => (images.value = data));
 });
 
-function getSeverity(status) {
+function getSeverity(status: string): string | undefined {
     switch (status) {
         case 'INSTOCK':
             return 'success';
@@ -58,7 +58,7 @@ function getSeverity(status) {
             return 'danger';
 
         default:
-            return null;
+            return undefined;
     }
 }
 </script>

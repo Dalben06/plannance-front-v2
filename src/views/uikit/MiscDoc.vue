@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 const value = ref(0);
-let interval = null;
+let interval: ReturnType<typeof setInterval> | undefined = undefined;
 
 function startProgress() {
     interval = setInterval(() => {
@@ -16,7 +16,7 @@ function startProgress() {
 
 function endProgress() {
     clearInterval(interval);
-    interval = null;
+    interval = undefined;
 }
 
 onMounted(() => {

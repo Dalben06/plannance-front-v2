@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 
 const items = ref([
@@ -24,10 +24,10 @@ const cardMenu = ref([
     { label: 'Update', icon: 'pi pi-fw pi-refresh' },
     { label: 'Delete', icon: 'pi pi-fw pi-trash' }
 ]);
-const menuRef = ref(null);
+const menuRef = ref<{ toggle: (event: Event) => void } | null>(null);
 
-function toggle() {
-    menuRef.value.toggle(event);
+function toggle(event: Event) {
+    menuRef.value?.toggle(event);
 }
 </script>
 

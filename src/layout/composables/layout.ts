@@ -3,7 +3,7 @@ import { computed, reactive } from 'vue';
 const layoutConfig = reactive({
     preset: 'Aura',
     primary: 'emerald',
-    surface: null,
+    surface: null as string | null,
     darkTheme: false,
     menuMode: 'static'
 });
@@ -15,8 +15,10 @@ const layoutState = reactive({
     configSidebarVisible: false,
     sidebarExpanded: false,
     menuHoverActive: false,
-    activeMenuItem: null,
-    activePath: null
+    mobileMenuActive: false,
+    anchored: false,
+    activeMenuItem: null as string | null,
+    activePath: null as string | null
 });
 
 export function useLayout() {
@@ -27,7 +29,7 @@ export function useLayout() {
             return;
         }
 
-        document.startViewTransition(() => executeDarkModeToggle(event));
+        document.startViewTransition(() => executeDarkModeToggle());
     };
 
     const executeDarkModeToggle = () => {
@@ -57,7 +59,7 @@ export function useLayout() {
         layoutState.mobileMenuActive = false;
     };
 
-    const changeMenuMode = (event) => {
+    const changeMenuMode = (event: { value: string }) => {
         layoutConfig.menuMode = event.value;
         layoutState.staticMenuInactive = false;
         layoutState.mobileMenuActive = false;

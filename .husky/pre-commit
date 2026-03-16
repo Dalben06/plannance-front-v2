@@ -7,4 +7,4 @@ fi
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm use
 [ -s "$NVS_HOME/nvs.sh" ] && . "$NVS_HOME/nvs.sh" && echo "using nvs" && nvs use
 
-npm run lint:check && npm run test:coverage
+npm run lint

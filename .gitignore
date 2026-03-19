@@ -16,3 +16,5 @@ dist
 .eslintcache
 api-generator/typedoc.json
 **/.DS_Store
+.vercel
+.env*.local

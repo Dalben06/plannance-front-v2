@@ -7,7 +7,7 @@
         "preview": "vite preview",
         "lint": "eslint --fix . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --ignore-path .gitignore",
         "format": "prettier --write .",
-        "test": "vitest",
+        "test": "vitest run",
         "test:coverage": "vitest run --coverage"
     },
     "dependencies": {

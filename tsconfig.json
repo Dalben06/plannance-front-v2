@@ -6,7 +6,8 @@
         "paths": {
             "@/*": ["src/*"],
             "@tests/*": ["tests/*"]
-        }
+        },
+        "types": ["vite/client", "vitest/globals"]
     },
     "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts"]
 }

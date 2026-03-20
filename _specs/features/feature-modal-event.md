@@ -139,7 +139,7 @@ updateCalendarEvent(id, payload: Omit<CalendarEvent, 'id'>): Promise<CalendarEve
 
 ## Tests
 
-> No test framework is configured in this project. Test scenarios are documented for future implementation.
+> this project uses Vitest for unit testing. The following scenarios should be covered by existing or new Vitest spec files using the repository's configured test scripts.
 
 ### `CalendarEventModal.spec.ts`
 - [ ] Component renders (shallowMount)

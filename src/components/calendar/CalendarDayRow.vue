@@ -63,7 +63,7 @@ function openForCreate(date: Date = toISODate(props.currentDate)): void {
                 <span data-testid="day-skeleton" class="h-8 w-8 rounded-lg bg-surface-200 dark:bg-surface-700 animate-pulse" aria-hidden="true" />
             </template>
             <template v-else>
-                <button type="button" class="layout-topbar-action" title="Add Event" @click="openForCreate(toISODate(day.date))">
+                <button type="button" class="layout-topbar-action" title="Add Event" data-testid="add-event-button" @click="openForCreate(toISODate(day.date))">
                     <i class="pi pi-calendar-plus"></i>
                 </button>
                 <span data-testid="day-number" class="grid h-8 w-8 place-items-center rounded-lg text-sm font-extrabold" :class="dayBadgeClass(day.date)">

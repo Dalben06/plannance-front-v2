@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import CalendarEventDay from '@/components/calendar/CalendarEventDay.vue';
 import CalendarSummaryDay from '@/components/calendar/CalendarSummaryDay.vue';
+import { useCalendarEventModal } from '@/composable/calendar/useCalendarEventModal';
 import { useCalendarStore } from '@/stores/calendar';
 import type { CalendarDay } from '@/types/api.p';
 import { atNoon, isSameDay, toISODate, toKey } from '@/utils/calendar-utils';
@@ -41,6 +42,11 @@ function cellClass(d: Date | string): string {
 function dayBadgeClass(d: Date | string): string {
     return isToday(d) ? 'bg-primary-500/10 text-primary-700 dark:text-primary-300' : 'bg-surface-100 dark:bg-surface-700/50 text-surface-600 dark:text-surface-300';
 }
+
+const { openForEdit } = useCalendarEventModal();
+function openForCreate(date: Date = toISODate(props.currentDate)): void {
+    openForEdit({ start: date, title: '', amount: 0, type: 'debit', id: '' });
+}
 </script>
 
 <template>
@@ -52,11 +58,14 @@ function dayBadgeClass(d: Date | string): string {
         class="min-h-32 rounded-2xl border border-surface-200 dark:border-surface-700 bg-surface-50 dark:bg-surface-800/40 p-2 shadow-sm transition hover:-translate-y-0.5 hover:bg-surface-100 dark:hover:bg-surface-700/50 hover:border-primary-300/60 dark:hover:border-primary-400/60 hover:shadow-md grid grid-rows-[auto_1fr_auto] gap-1"
         :class="cellClass(day.date)"
     >
-        <div class="flex items-center justify-end">
+        <div class="flex items-center justify-between">
             <template v-if="isLoading">
                 <span data-testid="day-skeleton" class="h-8 w-8 rounded-lg bg-surface-200 dark:bg-surface-700 animate-pulse" aria-hidden="true" />
             </template>
             <template v-else>
+                <button type="button" class="layout-topbar-action" title="Add Event" data-testid="add-event-button" @click="openForCreate(toISODate(day.date))">
+                    <i class="pi pi-calendar-plus"></i>
+                </button>
                 <span data-testid="day-number" class="grid h-8 w-8 place-items-center rounded-lg text-sm font-extrabold" :class="dayBadgeClass(day.date)">
                     {{ toISODate(day.date).getDate() }}
                 </span>

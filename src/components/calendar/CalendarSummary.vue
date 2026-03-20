@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import BaseStatsWidget, { type StatsWidgetProps } from '@/components/dashboard/BaseStatsWidget.vue';
+import { useCalendarEventModal } from '@/composable/calendar/useCalendarEventModal';
 import { useCalendarSummaryState } from '@/composable/calendar/useCalendarSummaryState';
 import { useCalendarStore } from '@/stores/calendar';
 import { formatCurrency } from '@/utils/calendar-utils';
@@ -15,6 +16,8 @@ const { expenseFormatted, incomeFormatted } = useCalendarSummaryState({
     formatCurrency
 });
 
+const { openForCreate } = useCalendarEventModal();
+
 const charts = computed<StatsWidgetProps[]>(() => [
     { title: 'Expenses', value: expenseFormatted.value, icon: 'pi pi-chart-bar', color: 'red' },
     { title: 'Income', value: incomeFormatted.value, icon: 'pi pi-arrow-up-right', color: 'green' },
@@ -25,4 +28,7 @@ const charts = computed<StatsWidgetProps[]>(() => [
 
 <template>
     <BaseStatsWidget v-if="charts.length" :items="charts" :isLoading="isLoading" />
+    <div class="col-span-12 flex justify-end">
+        <Button label="Add Event" icon="pi pi-plus" @click="openForCreate" />
+    </div>
 </template>

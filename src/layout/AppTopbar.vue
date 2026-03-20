@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useCalendarEventModal } from '@/composable/calendar/useCalendarEventModal';
 import { useLayout } from '@/layout/composables/layout';
 import router from '@/router';
 import { useAuthStore } from '@/stores/auth';
@@ -6,6 +7,7 @@ import { ref } from 'vue';
 import AppConfigurator from './AppConfigurator.vue';
 
 const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
+const { openForCreate } = useCalendarEventModal();
 const profileMenu = ref<{ toggle: (event: Event) => void } | null>(null);
 const auth = useAuthStore();
 const menuItems = [
@@ -71,6 +73,10 @@ function toggleProfileMenu(event: Event) {
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
+                    <button type="button" class="layout-topbar-action" title="Add Event" @click="openForCreate">
+                        <i class="pi pi-plus"></i>
+                        <span>Add Event</span>
+                    </button>
                     <router-link type="button" class="layout-topbar-action" to="/home/calendar">
                         <i class="pi pi-calendar"></i>
                         <span>Calendar</span>

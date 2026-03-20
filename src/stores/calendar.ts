@@ -5,10 +5,10 @@ import { computed, ref, watch } from 'vue';
 
 export const useCalendarStore = defineStore('calendar', () => {
     const days = ref<CalendarDay[]>([]);
-    const month = computed(() => date.value?.getMonth()); // 0-11
+    const date = ref<Date>(new Date());
     const fetchingEvents = ref(false);
     const isLoading = computed(() => fetchingEvents.value);
-    const date = ref<Date>(new Date());
+    const month = computed(() => date.value?.getMonth()); // 0-11
 
     function goToday() {
         date.value = new Date();
@@ -40,8 +40,11 @@ export const useCalendarStore = defineStore('calendar', () => {
 
     watch(month, async () => {
         fetchingEvents.value = true;
-        await getEventsFromMonth();
-        fetchingEvents.value = false;
+        try {
+            await getEventsFromMonth();
+        } finally {
+            fetchingEvents.value = false;
+        }
     });
 
     return { days, month, date, goToday, expenses, income, isLoading, getEventsFromMonth };

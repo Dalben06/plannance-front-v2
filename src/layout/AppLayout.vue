@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CalendarEventModal from '@/components/calendar/CalendarEventModal.vue';
 import { useLayout } from '@/layout/composables/layout';
 import { computed } from 'vue';
 import AppFooter from './AppFooter.vue';
@@ -31,4 +32,5 @@ const containerClass = computed(() => {
         <div class="layout-mask animate-fadein" @click="hideMobileMenu" />
     </div>
     <Toast />
+    <CalendarEventModal />
 </template>

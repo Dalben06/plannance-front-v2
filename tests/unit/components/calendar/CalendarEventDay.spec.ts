@@ -1,7 +1,19 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { shallowMount } from '@vue/test-utils';
 import CalendarEventDay from '@/components/calendar/CalendarEventDay.vue';
 import type { CalendarEvent } from '@/types/api.p';
+
+const openForEditSpy = vi.fn();
+
+vi.mock('@/composable/calendar/useCalendarEventModal', () => ({
+    useCalendarEventModal: () => ({
+        openForEdit: openForEditSpy,
+        openForCreate: vi.fn(),
+        visible: { value: false },
+        editingEvent: { value: null },
+        close: vi.fn()
+    })
+}));
 
 function makeEvent(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
     return {
@@ -27,8 +39,8 @@ describe('CalendarEventDay', () => {
         const wrapper = shallowMount(CalendarEventDay, {
             props: { events, maxChipsPerDay: 3 }
         });
-        expect(wrapper.findAll('div[title]')).toHaveLength(2);
-        expect(wrapper.find('button').exists()).toBe(false);
+        expect(wrapper.findAll('[data-testid="event-chip"]')).toHaveLength(2);
+        expect(wrapper.find('button[title^="Show"]').exists()).toBe(false);
     });
 
     it('events.length > maxChipsPerDay: renders only maxChipsPerDay chips + "+N more" button', () => {
@@ -36,8 +48,8 @@ describe('CalendarEventDay', () => {
         const wrapper = shallowMount(CalendarEventDay, {
             props: { events, maxChipsPerDay: 2 }
         });
-        expect(wrapper.findAll('div[title]')).toHaveLength(2);
-        const button = wrapper.find('button');
+        expect(wrapper.findAll('[data-testid="event-chip"]')).toHaveLength(2);
+        const button = wrapper.find('button[title^="Show"]');
         expect(button.exists()).toBe(true);
         expect(button.text()).toContain('+2 more');
     });
@@ -49,21 +61,30 @@ describe('CalendarEventDay', () => {
     ])('%i events with maxChipsPerDay=%i: %i chips shown, button=%s', (eventsCount, maxChips, expectedChips, hasButton) => {
         const events = Array.from({ length: eventsCount }, (_, i) => makeEvent({ title: `Event ${i}`, id: i }));
         const wrapper = shallowMount(CalendarEventDay, { props: { events, maxChipsPerDay: maxChips } });
-        expect(wrapper.findAll('div[title]')).toHaveLength(expectedChips);
-        expect(wrapper.find('button').exists()).toBe(hasButton);
+        expect(wrapper.findAll('[data-testid="event-chip"]')).toHaveLength(expectedChips);
+        expect(wrapper.find('button[title^="Show"]').exists()).toBe(hasButton);
     });
 
     it('event.type="debit": chip has rose color classes', () => {
         const events = [makeEvent({ type: 'debit', title: 'Expense' })];
         const wrapper = shallowMount(CalendarEventDay, { props: { events, maxChipsPerDay: 3 } });
-        const chip = wrapper.find('div[title]');
+        const chip = wrapper.find('[data-testid="event-chip"]');
         expect(chip.classes().join(' ')).toContain('rose');
     });
 
     it('event.type="credit": chip has primary color classes', () => {
         const events = [makeEvent({ type: 'credit', title: 'Income' })];
         const wrapper = shallowMount(CalendarEventDay, { props: { events, maxChipsPerDay: 3 } });
-        const chip = wrapper.find('div[title]');
+        const chip = wrapper.find('[data-testid="event-chip"]');
         expect(chip.classes().join(' ')).toContain('primary');
+    });
+
+    it('clicking a chip calls openForEdit with the correct event', async () => {
+        openForEditSpy.mockClear();
+        const event = makeEvent({ title: 'Clickable', type: 'debit' });
+        const wrapper = shallowMount(CalendarEventDay, { props: { events: [event], maxChipsPerDay: 3 } });
+        await wrapper.find('[data-testid="event-chip"]').trigger('click');
+        expect(openForEditSpy).toHaveBeenCalledOnce();
+        expect(openForEditSpy).toHaveBeenCalledWith(event);
     });
 });

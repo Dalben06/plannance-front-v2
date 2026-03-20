@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+import { useCalendarEventModal } from '@/composable/calendar/useCalendarEventModal';
 import type { CalendarEvent } from '@/types/api.p';
+
+const { openForEdit } = useCalendarEventModal();
 
 const props = defineProps<{
     events: CalendarEvent[];
@@ -22,9 +25,9 @@ function chipClasses(ev: CalendarEvent): string {
     <div class="min-h-0 overflow-hidden">
         <div class="flex min-h-0 flex-col gap-1 overflow-hidden">
             <template v-if="props.events?.length">
-                <div v-for="eventDay in props.events.slice(0, props.maxChipsPerDay)" :key="eventDay.id" :class="chipClasses(eventDay)" :title="eventDay.title">
+                <button v-for="eventDay in props.events.slice(0, props.maxChipsPerDay)" :key="eventDay.id" data-testid="event-chip" type="button" :class="chipClasses(eventDay)" :title="eventDay.title" @click="openForEdit(eventDay)">
                     {{ eventDay.title }}
-                </div>
+                </button>
 
                 <button
                     v-if="props.events.length > props.maxChipsPerDay"

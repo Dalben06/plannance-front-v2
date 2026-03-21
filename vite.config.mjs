@@ -10,7 +10,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     plugins: [
         vue(),
-        tailwindcss(),
+        ...(process.env.VITEST ? [] : [tailwindcss()]),
         Components({
             resolvers: [PrimeVueResolver()]
         })

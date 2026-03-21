@@ -3,7 +3,12 @@ import App from './App.vue';
 import router from './router';
 
 import Aura from '@primeuix/themes/aura';
+import Lara from '@primeuix/themes/lara';
+import Nora from '@primeuix/themes/nora';
 import PrimeVue from 'primevue/config';
+
+const presets: Record<string, object> = { Aura, Lara, Nora };
+const selectedPreset = presets[import.meta.env.VITE_THEME_PRESET] ?? Lara;
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 
@@ -16,7 +21,7 @@ const app = createApp(App);
 app.use(router);
 app.use(PrimeVue, {
     theme: {
-        preset: Aura,
+        preset: selectedPreset,
         options: {
             darkModeSelector: '.app-dark'
         }

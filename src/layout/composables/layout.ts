@@ -1,12 +1,14 @@
 import { computed, reactive } from 'vue';
 
 const layoutConfig = reactive({
-    preset: 'Aura',
-    primary: 'emerald',
-    surface: null as string | null,
+    preset: import.meta.env.VITE_THEME_PRESET || 'Lara',
+    primary: import.meta.env.VITE_THEME_PRIMARY || 'green',
+    surface: (import.meta.env.VITE_THEME_SURFACE || null) as string | null,
     darkTheme: false,
-    menuMode: 'static'
+    menuMode: import.meta.env.VITE_MENU_MODE || 'static'
 });
+
+const isThemeLocked = computed(() => import.meta.env.VITE_LOCK_THEME === 'true');
 
 const layoutState = reactive({
     staticMenuInactive: false,
@@ -77,6 +79,7 @@ export function useLayout() {
         layoutConfig,
         layoutState,
         isDarkTheme,
+        isThemeLocked,
         toggleDarkMode,
         toggleConfigSidebar,
         toggleMenu,

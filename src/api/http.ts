@@ -1,5 +1,6 @@
 // src/api/http.ts
 import { env } from '@/config/env';
+import router from '@/router';
 import axios, { AxiosError, type AxiosInstance } from 'axios';
 
 function getAccessToken(): string | null {
@@ -41,12 +42,11 @@ http.interceptors.response.use(
         const status = error.response.status;
         const data = error.response.data;
 
-        // Example: auto-logout on 401
         if (status === 401) {
             // You can also emit an event, call a store, or redirect
             localStorage.removeItem('access_token');
             localStorage.removeItem('auth_user');
-            // window.location.href = '/login';
+            router.push('/auth/login');
         }
 
         // Return a consistent error shape

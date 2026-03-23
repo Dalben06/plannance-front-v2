@@ -5,33 +5,35 @@ import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 import { useAuthStore } from '@/stores/auth';
 import { toTypedSchema } from '@vee-validate/yup';
 import { useForm } from 'vee-validate';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
 const loginSchema = toTypedSchema(
     yup.object({
-        email: yup.string().email().required(),
-        password: yup.string().min(6).required()
+        email: yup.string().email('Invalid email address').required('Email is required'),
+        password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required')
     })
 );
 
-const { handleSubmit: handleLoginSubmit, defineField: defineLoginField } = useForm({ validationSchema: loginSchema });
+const { handleSubmit: handleLoginSubmit, defineField: defineLoginField, isSubmitting, errors } = useForm({ validationSchema: loginSchema });
 
 const [loginEmail] = defineLoginField('email');
 const [loginPassword] = defineLoginField('password');
 
 const router = useRouter();
 const auth = useAuthStore();
+const loginError = ref<string | null>(null);
 
-const onLogin = handleLoginSubmit((values) => {
-    authenticateWithVanillaAccount(values.email, values.password)
-        .then(async (authUser) => {
-            auth.setSession(authUser);
-            await router.push({ path: '/home/calendar' });
-        })
-        .catch((error) => {
-            console.error('Login failed:', error);
-        });
+const onLogin = handleLoginSubmit(async (values) => {
+    loginError.value = null;
+    try {
+        const authUser = await authenticateWithVanillaAccount(values.email, values.password);
+        auth.setSession(authUser);
+        await router.push({ path: '/home/calendar' });
+    } catch (error: any) {
+        loginError.value = error?.data?.message ?? error?.message ?? 'Login failed. Please try again.';
+    }
 });
 </script>
 
@@ -50,13 +52,22 @@ const onLogin = handleLoginSubmit((values) => {
                     <GoogleAuth />
                     <form @submit.prevent="onLogin">
                         <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-                        <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model.trim="loginEmail" />
+                        <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-1" v-model.trim="loginEmail" />
+                        <small v-if="errors.email" class="text-red-500 block mb-6" data-testid="email-error">{{ errors.email }}</small>
+                        <div v-else class="mb-6"></div>
 
                         <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
-                        <Password id="password1" v-model="loginPassword" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                        <Password id="password1" v-model="loginPassword" placeholder="Password" :toggleMask="true" class="mb-1" fluid :feedback="false"></Password>
+                        <small v-if="errors.password" class="text-red-500 block mb-6" data-testid="password-error">{{ errors.password }}</small>
+                        <div v-else class="mb-6"></div>
 
-                        <Button label="Sign In" class="w-full" type="submit"></Button>
+                        <Button label="Sign In" class="w-full" type="submit" :loading="isSubmitting" :disabled="isSubmitting" data-testid="submit-button"></Button>
+                        <Message v-if="loginError" severity="error" class="mt-3 w-full" data-testid="login-error">{{ loginError }}</Message>
                     </form>
+                    <div class="text-center mt-6">
+                        <span class="text-muted-color">Don't have an account? </span>
+                        <RouterLink to="/auth/signup" class="text-primary font-medium">Sign up</RouterLink>
+                    </div>
                 </div>
             </div>
         </div>

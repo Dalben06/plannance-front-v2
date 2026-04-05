@@ -6,7 +6,7 @@ import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 import AppConfigurator from './AppConfigurator.vue';
 
-const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
+const { toggleMenu, toggleDarkMode, isDarkTheme, isThemeLocked } = useLayout();
 const { openForCreate } = useCalendarEventModal();
 const profileMenu = ref<{ toggle: (event: Event) => void } | null>(null);
 const auth = useAuthStore();
@@ -29,7 +29,6 @@ const menuItems = [
         ]
     }
 ];
-
 function toggleProfileMenu(event: Event) {
     profileMenu.value?.toggle(event);
 }
@@ -52,7 +51,7 @@ function toggleProfileMenu(event: Event) {
                 <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
                     <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
                 </button>
-                <div class="relative">
+                <div class="relative" v-if="!isThemeLocked">
                     <button
                         v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'p-anchored-overlay-enter-active', leaveToClass: 'hidden', leaveActiveClass: 'p-anchored-overlay-leave-active', hideOnOutsideClick: true }"
                         type="button"

@@ -1,12 +1,15 @@
 import { computed, reactive } from 'vue';
+import { resolveThemePresetName, resolveThemePrimaryName, resolveThemeSurfaceName } from '../utils/theme';
 
 const layoutConfig = reactive({
-    preset: 'Aura',
-    primary: 'emerald',
-    surface: null as string | null,
+    preset: resolveThemePresetName(import.meta.env.VITE_THEME_PRESET),
+    primary: resolveThemePrimaryName(import.meta.env.VITE_THEME_PRIMARY),
+    surface: resolveThemeSurfaceName(import.meta.env.VITE_THEME_SURFACE),
     darkTheme: false,
-    menuMode: 'static'
+    menuMode: import.meta.env.VITE_MENU_MODE || 'static'
 });
+
+const isThemeLocked = computed(() => import.meta.env.VITE_LOCK_THEME === 'true');
 
 const layoutState = reactive({
     staticMenuInactive: false,
@@ -77,6 +80,7 @@ export function useLayout() {
         layoutConfig,
         layoutState,
         isDarkTheme,
+        isThemeLocked,
         toggleDarkMode,
         toggleConfigSidebar,
         toggleMenu,

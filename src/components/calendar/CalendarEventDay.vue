@@ -32,7 +32,7 @@ function chipClasses(ev: CalendarEvent): string {
                 <button
                     v-if="props.events.length > props.maxChipsPerDay"
                     type="button"
-                    class="inline-flex w-fit items-center rounded-full border border-primary-300/40 dark:border-primary-400/40 bg-primary-500/10 px-2 py-1 text-[11px] font-extrabold text-primary-700 dark:text-primary-300 transition hover:bg-primary-500/15 active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/50"
+                    class="inline-flex w-fit items-center rounded-full border px-2 py-1 text-[11px] font-extrabold dark:text-primary-300 transition active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/50"
                     :title="`Show ${props.events.length - props.maxChipsPerDay} more`"
                 >
                     +{{ props.events.length - props.maxChipsPerDay }} more

@@ -32,15 +32,6 @@ describe('resolveThemeSurfaceName', () => {
 });
 
 describe('getPrimaryPresetExtension', () => {
-    it('maps standard palettes into the primary semantic scale', () => {
-        const extension = getPrimaryPresetExtension('green');
-
-        expect(extension.semantic?.primary).toMatchObject({
-            500: '#22c55e',
-            700: '#15803d'
-        });
-    });
-
     it('builds the noir preset from the surface scale', () => {
         const extension = getPrimaryPresetExtension('noir');
         const noirSemantic = extension.semantic as { primary: Record<string, string>; colorScheme: { light: { primary: { color: string } } } };

@@ -1,7 +1,7 @@
-import type { PaletteDesignToken, Preset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
 import Lara from '@primeuix/themes/lara';
 import Nora from '@primeuix/themes/nora';
+import type { PaletteDesignToken, Preset } from '@primeuix/themes/types';
 
 export interface ThemePaletteOption {
     name: string;

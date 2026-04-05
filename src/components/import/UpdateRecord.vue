@@ -69,6 +69,7 @@ const getStatusLabel = (status: 'debit' | 'credit') => {
                 :value="currentImport?.data ?? []"
                 editMode="row"
                 dataKey="id"
+                data-testid="records-table"
                 @row-edit-save="onRowEditSave"
                 :pt="{
                     table: { style: 'min-width: 50rem' },

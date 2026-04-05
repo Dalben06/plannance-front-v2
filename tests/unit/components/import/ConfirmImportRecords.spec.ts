@@ -1,7 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ref } from 'vue';
 import ConfirmImportRecords from '@/components/import/ConfirmImportRecords.vue';
 import type { CsvImport } from '@/types/api.p';
 
@@ -15,19 +13,21 @@ vi.mock('vue-router', () => ({
     useRoute: () => ({ params: mockRouteParams })
 }));
 
-const mockImports = ref<CsvImport[]>([]);
-
-vi.mock('@/stores/import', () => ({
-    useImportStore: () => ({
-        imports: mockImports
-    })
+const { mockGetImportById, mockConfirmImport } = vi.hoisted(() => ({
+    mockGetImportById: vi.fn(),
+    mockConfirmImport: vi.fn().mockResolvedValue(undefined)
 }));
 
-vi.mock('pinia', async (importOriginal) => {
-    const actual = await importOriginal<typeof import('pinia')>();
+vi.mock('@/api/csv', () => ({
+    getImportById: mockGetImportById,
+    confirmImport: mockConfirmImport
+}));
+
+vi.mock('primevue', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('primevue')>();
     return {
         ...actual,
-        storeToRefs: (store: unknown) => store
+        useToast: () => ({ add: vi.fn() })
     };
 });
 
@@ -49,13 +49,14 @@ function makeCsvImport(overrides: Partial<CsvImport> = {}): CsvImport {
 
 describe('ConfirmImportRecords', () => {
     beforeEach(() => {
-        setActivePinia(createPinia());
-        mockImports.value = [];
+        mockGetImportById.mockClear();
+        mockConfirmImport.mockClear();
         mockRouterPush.mockClear();
         mockRouteParams.id = 'import-xyz';
     });
 
     it('renders confirm button', async () => {
+        mockGetImportById.mockResolvedValue(makeCsvImport());
         const wrapper = shallowMount(ConfirmImportRecords);
         await wrapper.vm.$nextTick();
 
@@ -63,38 +64,34 @@ describe('ConfirmImportRecords', () => {
     });
 
     it('shows total records count from currentImport', async () => {
-        mockImports.value = [makeCsvImport()];
-
+        mockGetImportById.mockResolvedValue(makeCsvImport());
         const wrapper = shallowMount(ConfirmImportRecords);
-        await wrapper.vm.$nextTick();
+        await new Promise((r) => setTimeout(r, 0));
 
         expect(wrapper.find('[data-testid="total-records"]').text()).toBe('3');
     });
 
     it('shows total errors count from currentImport', async () => {
-        mockImports.value = [makeCsvImport()];
-
+        mockGetImportById.mockResolvedValue(makeCsvImport());
         const wrapper = shallowMount(ConfirmImportRecords);
-        await wrapper.vm.$nextTick();
+        await new Promise((r) => setTimeout(r, 0));
 
         expect(wrapper.find('[data-testid="total-errors"]').text()).toBe('2');
     });
 
-    it('shows 0 records and 0 errors when no import found', async () => {
-        mockImports.value = [];
-
+    it('shows 0 records and 0 errors when import has no data', async () => {
+        mockGetImportById.mockResolvedValue(makeCsvImport({ data: [], errorLines: [] }));
         const wrapper = shallowMount(ConfirmImportRecords);
-        await wrapper.vm.$nextTick();
+        await new Promise((r) => setTimeout(r, 0));
 
         expect(wrapper.find('[data-testid="total-records"]').text()).toBe('0');
         expect(wrapper.find('[data-testid="total-errors"]').text()).toBe('0');
     });
 
     it('confirm button click navigates to import page', async () => {
-        mockImports.value = [makeCsvImport()];
-
+        mockGetImportById.mockResolvedValue(makeCsvImport());
         const wrapper = shallowMount(ConfirmImportRecords);
-        await wrapper.vm.$nextTick();
+        await new Promise((r) => setTimeout(r, 0));
 
         await wrapper.find('[data-testid="confirm-button"]').trigger('click');
         await new Promise((r) => setTimeout(r, 0));
@@ -103,6 +100,7 @@ describe('ConfirmImportRecords', () => {
     });
 
     it('no confirm error shown initially', async () => {
+        mockGetImportById.mockResolvedValue(makeCsvImport());
         const wrapper = shallowMount(ConfirmImportRecords);
         await wrapper.vm.$nextTick();
 
@@ -110,11 +108,10 @@ describe('ConfirmImportRecords', () => {
     });
 
     it('shows confirm error when router.push rejects', async () => {
+        mockGetImportById.mockResolvedValue(makeCsvImport());
         mockRouterPush.mockRejectedValueOnce(new Error('Navigation failed'));
-        mockImports.value = [makeCsvImport()];
-
         const wrapper = shallowMount(ConfirmImportRecords);
-        await wrapper.vm.$nextTick();
+        await new Promise((r) => setTimeout(r, 0));
 
         await wrapper.find('[data-testid="confirm-button"]').trigger('click');
         await new Promise((r) => setTimeout(r, 0));
@@ -123,13 +120,10 @@ describe('ConfirmImportRecords', () => {
     });
 
     it('DataTable receives currentImport data', async () => {
-        const importItem = makeCsvImport();
-        mockImports.value = [importItem];
-
+        mockGetImportById.mockResolvedValue(makeCsvImport());
         const wrapper = shallowMount(ConfirmImportRecords);
         await wrapper.vm.$nextTick();
 
-        const table = wrapper.find('[data-testid="confirm-table"]');
-        expect(table.exists()).toBe(true);
+        expect(wrapper.find('[data-testid="confirm-table"]').exists()).toBe(true);
     });
 });

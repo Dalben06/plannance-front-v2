@@ -1,7 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ref } from 'vue';
 import UpdateRecord from '@/components/import/UpdateRecord.vue';
 import type { CsvImport } from '@/types/api.p';
 
@@ -15,25 +13,15 @@ vi.mock('vue-router', () => ({
     useRoute: () => ({ params: mockRouteParams })
 }));
 
-const mockFetchImports = vi.fn();
-const mockIsLoading = ref(false);
-const mockImports = ref<CsvImport[]>([]);
-
-vi.mock('@/stores/import', () => ({
-    useImportStore: () => ({
-        imports: mockImports,
-        isLoading: mockIsLoading,
-        fetchImports: mockFetchImports
-    })
+const { mockGetImportById, mockUpdateImportRecord } = vi.hoisted(() => ({
+    mockGetImportById: vi.fn(),
+    mockUpdateImportRecord: vi.fn().mockResolvedValue(undefined)
 }));
 
-vi.mock('pinia', async (importOriginal) => {
-    const actual = await importOriginal<typeof import('pinia')>();
-    return {
-        ...actual,
-        storeToRefs: (store: unknown) => store
-    };
-});
+vi.mock('@/api/csv', () => ({
+    getImportById: mockGetImportById,
+    updateImportRecord: mockUpdateImportRecord
+}));
 
 function makeCsvImport(overrides: Partial<CsvImport> = {}): CsvImport {
     return {
@@ -52,17 +40,14 @@ function makeCsvImport(overrides: Partial<CsvImport> = {}): CsvImport {
 
 describe('UpdateRecord', () => {
     beforeEach(() => {
-        setActivePinia(createPinia());
-        mockIsLoading.value = false;
-        mockImports.value = [];
-        mockFetchImports.mockClear();
+        mockGetImportById.mockClear();
+        mockUpdateImportRecord.mockClear();
         mockRouterPush.mockClear();
         mockRouteParams.id = 'import-abc';
     });
 
     it('isLoading=true: shows skeleton, hides table', async () => {
-        mockIsLoading.value = true;
-        mockImports.value = [makeCsvImport()];
+        mockGetImportById.mockReturnValue(new Promise(() => {}));
 
         const wrapper = shallowMount(UpdateRecord);
         await wrapper.vm.$nextTick();
@@ -72,41 +57,38 @@ describe('UpdateRecord', () => {
     });
 
     it('isLoading=false with matching import: shows table', async () => {
-        mockIsLoading.value = false;
-        mockImports.value = [makeCsvImport()];
+        mockGetImportById.mockResolvedValue(makeCsvImport());
 
         const wrapper = shallowMount(UpdateRecord);
-        await wrapper.vm.$nextTick();
+        await new Promise((r) => setTimeout(r, 0));
 
         expect(wrapper.find('[data-testid="records-skeleton"]').exists()).toBe(false);
         expect(wrapper.find('[data-testid="records-table"]').exists()).toBe(true);
     });
 
-    it('isLoading=false with no matching import: shows empty table without crash', async () => {
-        mockIsLoading.value = false;
-        mockImports.value = [];
+    it('isLoading=false with no data: shows empty table without crash', async () => {
+        mockGetImportById.mockResolvedValue(null);
 
         const wrapper = shallowMount(UpdateRecord);
-        await wrapper.vm.$nextTick();
+        await new Promise((r) => setTimeout(r, 0));
 
         expect(wrapper.find('[data-testid="records-table"]').exists()).toBe(true);
     });
 
     it('DataTable is rendered when matching import data exists', async () => {
-        const importItem = makeCsvImport();
-        mockImports.value = [importItem];
+        mockGetImportById.mockResolvedValue(makeCsvImport());
 
         const wrapper = shallowMount(UpdateRecord);
-        await wrapper.vm.$nextTick();
+        await new Promise((r) => setTimeout(r, 0));
 
         expect(wrapper.find('[data-testid="records-table"]').exists()).toBe(true);
     });
 
     it('clicking Next navigates to import-confirm with current id', async () => {
-        mockImports.value = [makeCsvImport()];
+        mockGetImportById.mockResolvedValue(makeCsvImport());
 
         const wrapper = shallowMount(UpdateRecord);
-        await wrapper.vm.$nextTick();
+        await new Promise((r) => setTimeout(r, 0));
 
         await wrapper.find('[data-testid="next-button"]').trigger('click');
         await new Promise((r) => setTimeout(r, 0));
@@ -114,21 +96,22 @@ describe('UpdateRecord', () => {
         expect(mockRouterPush).toHaveBeenCalledWith({ name: 'import-confirm', params: { id: 'import-abc' } });
     });
 
-    it('onMounted: calls fetchImports when imports is empty', async () => {
-        mockImports.value = [];
+    it('onMounted: calls getImportById with route id', async () => {
+        mockGetImportById.mockResolvedValue(makeCsvImport());
 
         shallowMount(UpdateRecord);
         await new Promise((r) => setTimeout(r, 0));
 
-        expect(mockFetchImports).toHaveBeenCalledOnce();
+        expect(mockGetImportById).toHaveBeenCalledWith('import-abc');
     });
 
-    it('onMounted: does not call fetchImports when imports already loaded', async () => {
-        mockImports.value = [makeCsvImport()];
+    it('onMounted: calls getImportById with updated route id', async () => {
+        mockRouteParams.id = 'import-xyz';
+        mockGetImportById.mockResolvedValue(makeCsvImport({ id: 'import-xyz' }));
 
         shallowMount(UpdateRecord);
         await new Promise((r) => setTimeout(r, 0));
 
-        expect(mockFetchImports).not.toHaveBeenCalled();
+        expect(mockGetImportById).toHaveBeenCalledWith('import-xyz');
     });
 });

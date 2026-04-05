@@ -49,6 +49,10 @@ async function handleConfirm() {
                 <p class="text-sm text-surface-500 dark:text-surface-400">Total Records</p>
                 <p class="mt-1 text-2xl font-semibold" data-testid="total-records">{{ currentImport?.data.length ?? 0 }}</p>
             </div>
+            <div class="rounded-lg border border-surface-200 p-4 dark:border-surface-700">
+                <p class="text-sm text-surface-500 dark:text-surface-400">Total Errors</p>
+                <p class="mt-1 text-2xl font-semibold" data-testid="total-errors">{{ currentImport?.errorLines.length ?? 0 }}</p>
+            </div>
         </div>
 
         <DataTable :loading="isLoading" :value="currentImport?.data ?? []" data-testid="confirm-table">

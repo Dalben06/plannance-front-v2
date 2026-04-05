@@ -12,7 +12,6 @@ export const useTemplateStore = defineStore('template', () => {
         fetchingTemplates.value = true;
         try {
             const templatesData = await getTemplates();
-            console.log('Fetched templates:', templatesData);
             templates.value = templatesData;
         } finally {
             fetchingTemplates.value = false;

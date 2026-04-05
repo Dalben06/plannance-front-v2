@@ -135,7 +135,7 @@ function onHide() {
 
             <div class="flex flex-col gap-1">
                 <label for="event-start" class="font-medium text-sm">Start Date</label>
-                <DatePicker id="event-start" v-model="start" dateFormat="yy-mm-dd" placeholder="Select date" :invalid="!!startError" showIcon />
+                <DatePicker id="event-start" v-model="start" dateFormat="yy-mm-dd" placeholder="Select date" :invalid="!!startError" showIcon fluid />
                 <small v-if="startError" class="text-red-500">{{ startError }}</small>
             </div>
 

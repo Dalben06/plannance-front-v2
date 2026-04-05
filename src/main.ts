@@ -2,19 +2,18 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 
-import Aura from '@primeuix/themes/aura';
-import Lara from '@primeuix/themes/lara';
-import Nora from '@primeuix/themes/nora';
+import { updatePreset, updateSurfacePalette } from '@primeuix/themes';
 import PrimeVue from 'primevue/config';
-
-const presets: Record<string, object> = { Aura, Lara, Nora };
-const selectedPreset = presets[import.meta.env.VITE_THEME_PRESET] ?? Lara;
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
+import { findSurface, getPrimaryPresetExtension, resolveThemePreset } from '@/layout/utils/theme';
 import { createPinia } from 'pinia';
+
+const selectedPreset = resolveThemePreset(import.meta.env.VITE_THEME_PRESET);
+const selectedSurface = findSurface(import.meta.env.VITE_THEME_SURFACE);
 
 const app = createApp(App);
 
@@ -27,6 +26,12 @@ app.use(PrimeVue, {
         }
     }
 });
+updatePreset(getPrimaryPresetExtension(import.meta.env.VITE_THEME_PRIMARY));
+
+if (selectedSurface) {
+    updateSurfacePalette(selectedSurface.palette);
+}
+
 app.use(createPinia());
 app.use(ToastService);
 app.use(ConfirmationService);

@@ -1,9 +1,10 @@
 import { computed, reactive } from 'vue';
+import { resolveThemePresetName, resolveThemePrimaryName, resolveThemeSurfaceName } from '../utils/theme';
 
 const layoutConfig = reactive({
-    preset: import.meta.env.VITE_THEME_PRESET || 'Lara',
-    primary: import.meta.env.VITE_THEME_PRIMARY || 'green',
-    surface: (import.meta.env.VITE_THEME_SURFACE || null) as string | null,
+    preset: resolveThemePresetName(import.meta.env.VITE_THEME_PRESET),
+    primary: resolveThemePrimaryName(import.meta.env.VITE_THEME_PRIMARY),
+    surface: resolveThemeSurfaceName(import.meta.env.VITE_THEME_SURFACE),
     darkTheme: false,
     menuMode: import.meta.env.VITE_MENU_MODE || 'static'
 });

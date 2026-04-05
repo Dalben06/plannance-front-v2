@@ -31,7 +31,7 @@ export type ImportRecord = {
 export type CsvImport = {
     id: string;
     userId: string;
-    errorLines: number[];
+    errorsLines: number[];
     data: ImportRecord[];
     createdAt: Date | string;
     expiresAt: Date | string;

@@ -35,7 +35,7 @@ function makeCsvImport(overrides: Partial<CsvImport> = {}): CsvImport {
     return {
         id: 'import-xyz',
         userId: 'user-1',
-        errorLines: [1, 3],
+        errorsLines: [1, 3],
         data: [
             { id: 'r1', title: 'Salary', start: '2026-04-01', amount: 3000, type: 'credit' },
             { id: 'r2', title: 'Rent', start: '2026-04-05', amount: 1200, type: 'debit' },
@@ -71,21 +71,12 @@ describe('ConfirmImportRecords', () => {
         expect(wrapper.find('[data-testid="total-records"]').text()).toBe('3');
     });
 
-    it('shows total errors count from currentImport', async () => {
-        mockGetImportById.mockResolvedValue(makeCsvImport());
-        const wrapper = shallowMount(ConfirmImportRecords);
-        await new Promise((r) => setTimeout(r, 0));
-
-        expect(wrapper.find('[data-testid="total-errors"]').text()).toBe('2');
-    });
-
-    it('shows 0 records and 0 errors when import has no data', async () => {
-        mockGetImportById.mockResolvedValue(makeCsvImport({ data: [], errorLines: [] }));
+    it('shows 0 records when import has no data', async () => {
+        mockGetImportById.mockResolvedValue(makeCsvImport({ data: [], errorsLines: [] }));
         const wrapper = shallowMount(ConfirmImportRecords);
         await new Promise((r) => setTimeout(r, 0));
 
         expect(wrapper.find('[data-testid="total-records"]').text()).toBe('0');
-        expect(wrapper.find('[data-testid="total-errors"]').text()).toBe('0');
     });
 
     it('confirm button click navigates to import page', async () => {

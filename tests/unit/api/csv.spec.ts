@@ -22,7 +22,7 @@ function makeCsvImport(overrides: Partial<CsvImport> = {}): CsvImport {
     return {
         id: 'import-1',
         userId: 'user-1',
-        errorLines: [],
+        errorsLines: [],
         data: [],
         createdAt: '2026-04-01T10:00:00Z',
         expiresAt: '2026-04-08T10:00:00Z',

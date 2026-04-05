@@ -3,6 +3,7 @@ import AppLayout from '@/layout/AppLayout.vue';
 import { useAuthStore } from '@/stores/auth';
 import { createRouter, createWebHistory } from 'vue-router';
 import { calendarRouter } from './calendarRouter';
+import { importRouter } from './importRouter';
 import { uiKitRouter } from './uiKitRouter';
 
 const router = createRouter({
@@ -25,6 +26,7 @@ const router = createRouter({
                     component: () => import('@/views/Dashboard.vue')
                 },
                 ...calendarRouter,
+                ...importRouter,
                 ...(env.enableDebug ? uiKitRouter : [])
             ]
         },

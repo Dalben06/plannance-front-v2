@@ -1,0 +1,6 @@
+        - ImportFile.vue
+            - this step the user needs to select which template they will to import their files, and then attach their single file csv
+            - flow: 
+                - Add template: (TemplateImport.vue) 
+                    - Attach file and POST: /api/v1/csv/mapped formData: key:file and attach file
+                        - return `` {columns: [{name: string, type: string }]}`` type only can 

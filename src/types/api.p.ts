@@ -19,3 +19,44 @@ export type WeekStartsOn = 0 | 1;
 export type ResponseAPI<T> = {
     data: T;
 };
+
+export type ImportRecord = {
+    id: string;
+    title: string;
+    start: Date | string;
+    amount: number;
+    type: 'credit' | 'debit';
+};
+
+export type CsvImport = {
+    id: string;
+    userId: string;
+    errorLines: number[];
+    data: ImportRecord[];
+    createdAt: Date | string;
+    expiresAt: Date | string;
+};
+
+export type CsvColumnMapping = {
+    name: string;
+    type: string;
+};
+
+export type CsvUploadResponse = {
+    id: string;
+    columns: CsvColumnMapping[];
+};
+
+export type TemplateResponse = {
+    id: string;
+    userId: string;
+    name: string;
+    mapping: Record<string, string>;
+    createdAt: Date | string;
+    updatedAt: Date | string;
+};
+
+export type TemplateMapping = {
+    from: string;
+    to: string;
+};

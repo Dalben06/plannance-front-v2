@@ -276,6 +276,11 @@ const model = ref<MenuItem[]>([
                 label: 'Calendar',
                 icon: 'pi pi-fw pi-calendar',
                 to: '/home/calendar'
+            },
+            {
+                label: 'Import',
+                icon: 'pi pi-fw pi-file',
+                to: '/home/import'
             }
         ]
     },

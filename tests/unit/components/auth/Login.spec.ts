@@ -4,6 +4,7 @@ import Login from '@/views/pages/auth/Login.vue';
 import { flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { ButtonStub, FloatingConfiguratorStub, GoogleAuthStub, InputTextStub, MessageStub, PasswordStub, RouterLinkStub } from '@tests/stubs';
 
 const { mockRouterPush, mockAuthenticateWithVanillaAccount } = vi.hoisted(() => ({
     mockRouterPush: vi.fn().mockResolvedValue(undefined),
@@ -30,28 +31,6 @@ const mockAuthSession: AuthSession = {
     user: { id: 'u1', name: 'Jane Doe', email: 'jane@example.com', picture: null, emailVerified: true }
 };
 
-const inputTextStub = {
-    template: '<input :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
-    props: ['modelValue'],
-    emits: ['update:modelValue']
-};
-
-const passwordStub = {
-    template: '<input type="password" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
-    props: ['modelValue'],
-    emits: ['update:modelValue']
-};
-
-const buttonStub = {
-    template: '<button :type="type || \'button\'" :disabled="disabled || loading" data-testid="submit-button">{{ label }}</button>',
-    props: ['label', 'disabled', 'loading', 'type']
-};
-
-const messageStub = {
-    template: '<div data-testid="login-error"><slot /></div>',
-    props: ['severity']
-};
-
 function mountLogin() {
     const pinia = createPinia();
     setActivePinia(pinia);
@@ -59,13 +38,13 @@ function mountLogin() {
         global: {
             plugins: [pinia],
             stubs: {
-                FloatingConfigurator: { template: '<div />' },
-                GoogleAuth: { template: '<div />' },
-                RouterLink: { template: '<a><slot /></a>' },
-                InputText: inputTextStub,
-                Password: passwordStub,
-                Button: buttonStub,
-                Message: messageStub
+                FloatingConfigurator: FloatingConfiguratorStub,
+                GoogleAuth: GoogleAuthStub,
+                RouterLink: RouterLinkStub,
+                InputText: InputTextStub,
+                Password: PasswordStub,
+                Button: ButtonStub,
+                Message: MessageStub
             }
         }
     });

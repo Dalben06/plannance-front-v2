@@ -4,6 +4,7 @@ import { createPinia, setActivePinia } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import type { AuthSession } from '@/api/auth';
 import SignUp from '@/views/pages/auth/SignUp.vue';
+import { ButtonStub, FloatingConfiguratorStub, InputTextStub, PasswordStub, RouterLinkStub } from '@tests/stubs';
 
 const { mockToastAdd, mockRouterPush, mockCreateUser, mockAuthenticateWithVanillaAccount } = vi.hoisted(() => ({
     mockToastAdd: vi.fn(),
@@ -36,23 +37,6 @@ const mockAuthSession: AuthSession = {
     user: { id: 'u1', name: 'John Doe', email: 'john@example.com', picture: null, emailVerified: false }
 };
 
-const inputTextStub = {
-    template: '<input :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
-    props: ['modelValue'],
-    emits: ['update:modelValue']
-};
-
-const passwordStub = {
-    template: '<input type="password" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
-    props: ['modelValue'],
-    emits: ['update:modelValue']
-};
-
-const buttonStub = {
-    template: '<button :type="type || \'button\'" :disabled="disabled || loading" data-testid="submit-button">{{ label }}</button>',
-    props: ['label', 'disabled', 'loading', 'type']
-};
-
 function mountSignUp() {
     const pinia = createPinia();
     setActivePinia(pinia);
@@ -60,11 +44,11 @@ function mountSignUp() {
         global: {
             plugins: [pinia],
             stubs: {
-                FloatingConfigurator: { template: '<div />' },
-                RouterLink: { template: '<a><slot /></a>' },
-                InputText: inputTextStub,
-                Password: passwordStub,
-                Button: buttonStub
+                FloatingConfigurator: FloatingConfiguratorStub,
+                RouterLink: RouterLinkStub,
+                InputText: InputTextStub,
+                Password: PasswordStub,
+                Button: ButtonStub
             }
         }
     });

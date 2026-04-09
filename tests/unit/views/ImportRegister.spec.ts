@@ -2,6 +2,7 @@ import { shallowMount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ImportRegister from '@/views/ImportRegister.vue';
+import { RouterViewStub } from '@tests/stubs';
 
 const mockRouteName = { value: 'import-register' };
 
@@ -12,8 +13,6 @@ vi.mock('vue-router', async (importOriginal) => {
         useRoute: () => ({ name: mockRouteName.value })
     };
 });
-
-const RouterViewStub = { template: '<div data-testid="router-view-stub" />' };
 
 function mountComponent() {
     return shallowMount(ImportRegister, {

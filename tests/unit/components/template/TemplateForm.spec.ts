@@ -3,6 +3,7 @@ import type { CsvColumnMapping } from '@/types/api.p';
 import { flushPromises, shallowMount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { SelectStub } from '@tests/stubs';
 
 const { mockSaveTemplate, mockUpdateTemplate, mockUploadCsvForMapping } = vi.hoisted(() => ({
     mockSaveTemplate: vi.fn(),
@@ -30,13 +31,6 @@ const TEST_COLUMNS: CsvColumnMapping[] = [
     { name: 'Description', type: 'string' },
     { name: 'Extra String', type: 'string' }
 ];
-
-// PrimeVue's Select stub with declared props so findComponent(...).props() works
-const SelectStub = {
-    props: ['options', 'modelValue', 'invalid', 'placeholder'],
-    emits: ['update:modelValue'],
-    template: '<div></div>'
-};
 
 function mountForm(props: Record<string, unknown> = {}) {
     return shallowMount(TemplateForm, {

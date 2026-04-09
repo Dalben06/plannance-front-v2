@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth';
 import { createRouter, createWebHistory } from 'vue-router';
 import { calendarRouter } from './calendarRouter';
 import { importRouter } from './importRouter';
+import { templateRouter } from './templateRouter';
 import { uiKitRouter } from './uiKitRouter';
 
 const router = createRouter({
@@ -27,6 +28,7 @@ const router = createRouter({
                 },
                 ...calendarRouter,
                 ...importRouter,
+                ...templateRouter,
                 ...(env.enableDebug ? uiKitRouter : [])
             ]
         },

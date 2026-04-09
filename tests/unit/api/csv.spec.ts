@@ -1,4 +1,4 @@
-import type { CsvImport, ResponseAPI, TemplateResponse } from '@/types/api.p';
+import type { CsvImport, CsvMappedResponse, ResponseAPI, TemplateResponse, TemplateSavePayload } from '@/types/api.p';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/api/http', () => ({
@@ -9,7 +9,7 @@ vi.mock('@/api/http', () => ({
     }
 }));
 
-import { confirmImport, getImportById, getImports, getTemplates, newMap, updateImportRecord, uploadCsvFile } from '@/api/csv';
+import { confirmImport, getImportById, getImports, getTemplateById, getTemplates, newMap, saveTemplate, updateImportRecord, updateTemplate, uploadCsvFile, uploadCsvForMapping } from '@/api/csv';
 import { http } from '@/api/http';
 
 const mockHttp = {
@@ -266,5 +266,185 @@ describe('newMap', () => {
         const result = await newMap(payload);
 
         expect(result).toEqual(payload);
+    });
+});
+
+function makeCsvMappedResponse(overrides: Partial<CsvMappedResponse> = {}): CsvMappedResponse {
+    return {
+        columns: [
+            { name: 'Date', type: 'date' },
+            { name: 'Amount', type: 'number' },
+            { name: 'Description', type: 'string' }
+        ],
+        ...overrides
+    };
+}
+
+function makeTemplateSavePayload(overrides: Partial<TemplateSavePayload> = {}): TemplateSavePayload {
+    return {
+        name: 'My Template',
+        mappings: [
+            { from: 'Date', to: 'startAt' },
+            { from: 'Amount', to: 'amount' },
+            { from: 'Description', to: 'title' }
+        ],
+        ...overrides
+    };
+}
+
+describe('uploadCsvForMapping', () => {
+    beforeEach(() => {
+        mockHttp.post.mockClear();
+    });
+
+    it('calls POST /api/v1/csv/mapped with FormData containing the file', async () => {
+        const file = new File(['a,b,c'], 'test.csv', { type: 'text/csv' });
+        mockHttp.post.mockResolvedValue({ data: { data: makeCsvMappedResponse() } as ResponseAPI<CsvMappedResponse> });
+
+        await uploadCsvForMapping(file);
+
+        expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/csv/mapped', expect.any(FormData), {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+    });
+
+    it('appends file under "file" key in FormData', async () => {
+        const file = new File(['data'], 'upload.csv', { type: 'text/csv' });
+        mockHttp.post.mockResolvedValue({ data: { data: makeCsvMappedResponse() } as ResponseAPI<CsvMappedResponse> });
+
+        await uploadCsvForMapping(file);
+
+        const formData = mockHttp.post.mock.calls[0][1] as FormData;
+        expect(formData.get('file')).toBe(file);
+    });
+
+    it('returns columns from the response', async () => {
+        const file = new File([''], 'test.csv');
+        const response = makeCsvMappedResponse();
+        mockHttp.post.mockResolvedValue({ data: response as CsvMappedResponse });
+
+        const result = await uploadCsvForMapping(file);
+
+        expect(result.columns).toEqual(response.columns);
+    });
+
+    it('rejects with 400 error when server returns 400', async () => {
+        const file = new File(['bad'], 'bad.csv');
+        mockHttp.post.mockRejectedValue({ status: 400, data: { message: 'Invalid CSV' } });
+
+        await expect(uploadCsvForMapping(file)).rejects.toMatchObject({ status: 400 });
+    });
+
+    it('rejects with 500 error when server returns 500', async () => {
+        const file = new File([''], 'test.csv');
+        mockHttp.post.mockRejectedValue({ status: 500, message: 'Internal Server Error' });
+
+        await expect(uploadCsvForMapping(file)).rejects.toMatchObject({ status: 500 });
+    });
+});
+
+describe('getTemplateById', () => {
+    beforeEach(() => {
+        mockHttp.get.mockClear();
+    });
+
+    it('calls GET /api/v1/csv/mapping/:id', async () => {
+        const template = makeTemplateResponse({ id: 'template-42' });
+        mockHttp.get.mockResolvedValue({ data: { data: template } as ResponseAPI<TemplateResponse> });
+
+        const result = await getTemplateById('template-42');
+
+        expect(mockHttp.get).toHaveBeenCalledWith('/api/v1/csv/mapping/template-42');
+        expect(result).toEqual(template);
+    });
+
+    it('returns the template from the response', async () => {
+        const template = makeTemplateResponse({ id: 'abc', name: 'Bank Statement' });
+        mockHttp.get.mockResolvedValue({ data: { data: template } as ResponseAPI<TemplateResponse> });
+
+        const result = await getTemplateById('abc');
+
+        expect(result.id).toBe('abc');
+        expect(result.name).toBe('Bank Statement');
+    });
+});
+
+describe('saveTemplate', () => {
+    beforeEach(() => {
+        mockHttp.post.mockClear();
+    });
+
+    it('calls POST /api/v1/csv/mapping with the payload', async () => {
+        const payload = makeTemplateSavePayload();
+        const created = makeTemplateResponse();
+        mockHttp.post.mockResolvedValue({ data: { data: created } as ResponseAPI<TemplateResponse> });
+
+        await saveTemplate(payload);
+
+        expect(mockHttp.post).toHaveBeenCalledWith('/api/v1/csv/mapping', payload);
+    });
+
+    it('returns the created template from the response', async () => {
+        const payload = makeTemplateSavePayload({ name: 'New Template' });
+        const created = makeTemplateResponse({ name: 'New Template' });
+        mockHttp.post.mockResolvedValue({ data: { data: created } as ResponseAPI<TemplateResponse> });
+
+        const result = await saveTemplate(payload);
+
+        expect(result).toEqual(created);
+    });
+
+    it('rejects with 400 error when server returns 400', async () => {
+        const payload = makeTemplateSavePayload();
+        mockHttp.post.mockRejectedValue({ status: 400, data: { message: 'Validation error' } });
+
+        await expect(saveTemplate(payload)).rejects.toMatchObject({ status: 400 });
+    });
+
+    it('rejects with 500 error when server returns 500', async () => {
+        const payload = makeTemplateSavePayload();
+        mockHttp.post.mockRejectedValue({ status: 500, message: 'Internal Server Error' });
+
+        await expect(saveTemplate(payload)).rejects.toMatchObject({ status: 500 });
+    });
+});
+
+describe('updateTemplate', () => {
+    beforeEach(() => {
+        mockHttp.put.mockClear();
+    });
+
+    it('calls PUT /api/v1/csv/mapping/:id with the payload', async () => {
+        const payload = makeTemplateSavePayload();
+        const updated = makeTemplateResponse({ id: 'template-10' });
+        mockHttp.put.mockResolvedValue({ data: { data: updated } as ResponseAPI<TemplateResponse> });
+
+        await updateTemplate('template-10', payload);
+
+        expect(mockHttp.put).toHaveBeenCalledWith('/api/v1/csv/mapping/template-10', payload);
+    });
+
+    it('returns the updated template from the response', async () => {
+        const payload = makeTemplateSavePayload({ name: 'Updated' });
+        const updated = makeTemplateResponse({ name: 'Updated' });
+        mockHttp.put.mockResolvedValue({ data: { data: updated } as ResponseAPI<TemplateResponse> });
+
+        const result = await updateTemplate('template-1', payload);
+
+        expect(result).toEqual(updated);
+    });
+
+    it('rejects with 400 error when server returns 400', async () => {
+        const payload = makeTemplateSavePayload();
+        mockHttp.put.mockRejectedValue({ status: 400, data: { message: 'Validation error' } });
+
+        await expect(updateTemplate('template-1', payload)).rejects.toMatchObject({ status: 400 });
+    });
+
+    it('rejects with 500 error when server returns 500', async () => {
+        const payload = makeTemplateSavePayload();
+        mockHttp.put.mockRejectedValue({ status: 500, message: 'Internal Server Error' });
+
+        await expect(updateTemplate('template-1', payload)).rejects.toMatchObject({ status: 500 });
     });
 });

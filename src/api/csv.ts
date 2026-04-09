@@ -1,4 +1,4 @@
-import type { CsvImport, ResponseAPI, TemplateResponse } from '@/types/api.p';
+import type { CsvImport, CsvMappedResponse, ResponseAPI, TemplateResponse, TemplateSavePayload } from '@/types/api.p';
 import { http } from './http';
 
 export async function getImports(): Promise<CsvImport[]> {
@@ -39,5 +39,31 @@ export async function getTemplates(): Promise<TemplateResponse[]> {
 
 export async function newMap(_payload: TemplateResponse): Promise<TemplateResponse> {
     const { data } = await http.post<ResponseAPI<TemplateResponse>>('/api/v1/csv/mapping', _payload);
+    return data.data;
+}
+
+export async function uploadCsvForMapping(file: File): Promise<CsvMappedResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const { data } = await http.post<CsvMappedResponse>('/api/v1/csv/mapped', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    console.log('API response for CSV mapping:', data);
+    return data;
+}
+
+export async function getTemplateById(id: string): Promise<TemplateResponse> {
+    const { data } = await http.get<ResponseAPI<TemplateResponse>>(`/api/v1/csv/mapping/${id}`);
+    console.log(`API response for template with ID ${id}:`, data);
+    return data.data;
+}
+
+export async function saveTemplate(payload: TemplateSavePayload): Promise<TemplateResponse> {
+    const { data } = await http.post<ResponseAPI<TemplateResponse>>('/api/v1/csv/mapping', payload);
+    return data.data;
+}
+
+export async function updateTemplate(id: string, payload: TemplateSavePayload): Promise<TemplateResponse> {
+    const { data } = await http.put<ResponseAPI<TemplateResponse>>(`/api/v1/csv/mapping/${id}`, payload);
     return data.data;
 }

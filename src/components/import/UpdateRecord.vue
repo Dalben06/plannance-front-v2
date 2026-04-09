@@ -20,9 +20,14 @@ onMounted(async () => {
 const isLoading = ref(false);
 async function fetchCurrentImport() {
     isLoading.value = true;
-    const id = route.params.id as string;
-    currentImport.value = await getImportById(id);
-    isLoading.value = false;
+    try {
+        const id = route.params.id as string;
+        currentImport.value = await getImportById(id);
+        isLoading.value = false;
+    } catch (error) {
+        isLoading.value = false;
+        console.error('Failed to fetch import:', error);
+    }
 }
 
 const types = ref([

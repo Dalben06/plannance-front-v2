@@ -1,9 +1,9 @@
+import ImportPendingTable from '@/components/import/ImportPendingTable.vue';
+import type { CsvImport } from '@/types/api.p';
 import { shallowMount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ref } from 'vue';
-import ImportPendingTable from '@/components/import/ImportPendingTable.vue';
-import type { CsvImport } from '@/types/api.p';
 
 const { mockRouterPush } = vi.hoisted(() => ({
     mockRouterPush: vi.fn().mockResolvedValue(undefined)
@@ -37,7 +37,7 @@ function makeCsvImport(overrides: Partial<CsvImport> = {}): CsvImport {
     return {
         id: 'import-1',
         userId: 'user-1',
-        errorLines: [],
+        errorsLines: [],
         data: [],
         createdAt: '2026-04-01T10:00:00Z',
         expiresAt: '2026-04-08T10:00:00Z',
@@ -76,7 +76,7 @@ describe('ImportPendingTable', () => {
 
     it('onMounted: calls fetchImports', async () => {
         shallowMount(ImportPendingTable);
-        await wrapper_flush();
+        await wrapperFlush();
 
         expect(mockFetchImports).toHaveBeenCalledOnce();
     });
@@ -116,6 +116,6 @@ describe('ImportPendingTable', () => {
     });
 });
 
-async function wrapper_flush() {
+async function wrapperFlush() {
     await new Promise((r) => setTimeout(r, 0));
 }

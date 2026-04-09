@@ -1,4 +1,4 @@
-import type { CsvImport, CsvMappedResponse, ResponseAPI, TemplateResponse, TemplateSavePayload } from '@/types/api.p';
+import type { CsvImport, CsvUploadResponse, ResponseAPI, TemplateResponse } from '@/types/api.p';
 import { http } from './http';
 
 export async function getImports(): Promise<CsvImport[]> {
@@ -7,15 +7,15 @@ export async function getImports(): Promise<CsvImport[]> {
 }
 
 export async function getImportById(_id: string): Promise<CsvImport> {
-    const data = await http.get<CsvImport>('/api/v1/csv/import/' + _id);
-    return data.data;
+    const { data } = await http.get<CsvImport>('/api/v1/csv/import/' + _id);
+    return data;
 }
 
-export async function uploadCsvFile(file: File, templateId: string): Promise<CsvImport> {
+export async function uploadCsvFile(file: File, templateId: string): Promise<CsvUploadResponse> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('templateId', templateId);
-    const response = await http.post<CsvImport>('/api/v1/csv/import', formData, {
+    const response = await http.post<CsvUploadResponse>('/api/v1/csv/import', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
     });
 

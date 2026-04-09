@@ -14,9 +14,13 @@ onMounted(async () => {
 const isLoading = ref(false);
 async function fetchCurrentImport() {
     isLoading.value = true;
-    const id = route.params.id as string;
-    currentImport.value = await getImportById(id);
-    isLoading.value = false;
+    try {
+        const id = route.params.id as string;
+        isLoading.value = false;
+        currentImport.value = await getImportById(id);
+    } catch (error) {
+        isLoading.value = false;
+    }
 }
 
 const isConfirming = ref(false);
@@ -31,7 +35,7 @@ async function handleConfirm() {
             throw new Error('No import to confirm');
         }
         await confirmImport(currentImport.value?.id);
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Data import with success', life: 3000 });
+        toast.add({ severity: 'success', summary: 'Success', detail: 'Data imported successfully', life: 3000 });
         await router.push({ name: 'import' });
     } catch (error: unknown) {
         const err = error as { message?: string };
@@ -39,6 +43,10 @@ async function handleConfirm() {
     } finally {
         isConfirming.value = false;
     }
+}
+
+function backButton() {
+    router.push({ name: 'import-review', params: { id: currentImport.value?.id } });
 }
 </script>
 
@@ -49,12 +57,7 @@ async function handleConfirm() {
                 <p class="text-sm text-surface-500 dark:text-surface-400">Total Records</p>
                 <p class="mt-1 text-2xl font-semibold" data-testid="total-records">{{ currentImport?.data.length ?? 0 }}</p>
             </div>
-            <div class="rounded-lg border border-surface-200 p-4 dark:border-surface-700">
-                <p class="text-sm text-surface-500 dark:text-surface-400">Total Errors</p>
-                <p class="mt-1 text-2xl font-semibold" data-testid="total-errors">{{ currentImport?.errorLines.length ?? 0 }}</p>
-            </div>
         </div>
-
         <DataTable :loading="isLoading" :value="currentImport?.data ?? []" data-testid="confirm-table">
             <Column field="title" header="Title" />
             <Column field="start" header="Date" />
@@ -64,7 +67,8 @@ async function handleConfirm() {
 
         <Message v-if="confirmError" severity="error" data-testid="confirm-error">{{ confirmError }}</Message>
 
-        <div class="flex justify-end">
+        <div class="flex justify-between">
+            <Button severity="warn" label="Back" data-testid="back-button" @click="backButton" />
             <Button label="Confirm" icon="pi pi-check" data-testid="confirm-button" :loading="isConfirming" @click="handleConfirm" />
         </div>
     </div>

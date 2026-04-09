@@ -27,7 +27,7 @@ function makeCsvImport(overrides: Partial<CsvImport> = {}): CsvImport {
     return {
         id: 'import-abc',
         userId: 'user-1',
-        errorLines: [],
+        errorsLines: [],
         data: [
             { id: 'r1', title: 'Salary', start: '2026-04-01', amount: 3000, type: 'credit' },
             { id: 'r2', title: 'Rent', start: '2026-04-05', amount: 1200, type: 'debit' }

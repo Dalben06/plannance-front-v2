@@ -1,9 +1,9 @@
 import TemplateForm from '@/components/template/TemplateForm.vue';
 import type { CsvColumnMapping } from '@/types/api.p';
+import { SelectStub } from '@tests/stubs';
 import { flushPromises, shallowMount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { SelectStub } from '@tests/stubs';
 
 const { mockSaveTemplate, mockUpdateTemplate, mockUploadCsvForMapping } = vi.hoisted(() => ({
     mockSaveTemplate: vi.fn(),
@@ -218,7 +218,7 @@ describe('TemplateForm', () => {
         });
 
         it('201/200: shows success toast after saving', async () => {
-            mockSaveTemplate.mockResolvedValue({ id: '1', userId: 'u', name: 'T', mapping: {}, createdAt: '', updatedAt: '' });
+            mockSaveTemplate.mockResolvedValue({ id: '1', userId: 'u', name: 'T', mappings: {}, createdAt: '', updatedAt: '' });
 
             const wrapper = mountFormWithColumns({
                 initialName: 'Test',
@@ -231,7 +231,7 @@ describe('TemplateForm', () => {
         });
 
         it('emits "saved" event after successful save', async () => {
-            mockSaveTemplate.mockResolvedValue({ id: '1', userId: 'u', name: 'T', mapping: {}, createdAt: '', updatedAt: '' });
+            mockSaveTemplate.mockResolvedValue({ id: '1', userId: 'u', name: 'T', mappings: {}, createdAt: '', updatedAt: '' });
 
             const wrapper = mountFormWithColumns({
                 initialName: 'Test',
@@ -275,7 +275,7 @@ describe('TemplateForm', () => {
 
     describe('form submission - edit template', () => {
         it('calls updateTemplate with id and payload when templateId is set', async () => {
-            const updated = { id: 'tmpl-5', userId: 'u', name: 'Updated', mapping: {}, createdAt: '', updatedAt: '' };
+            const updated = { id: 'tmpl-5', userId: 'u', name: 'Updated', mappings: {}, createdAt: '', updatedAt: '' };
             mockUpdateTemplate.mockResolvedValue(updated);
 
             const wrapper = mountFormWithColumns({
@@ -299,7 +299,7 @@ describe('TemplateForm', () => {
         });
 
         it('200: shows success toast after updating', async () => {
-            mockUpdateTemplate.mockResolvedValue({ id: 'tmpl-5', userId: 'u', name: 'T', mapping: {}, createdAt: '', updatedAt: '' });
+            mockUpdateTemplate.mockResolvedValue({ id: 'tmpl-5', userId: 'u', name: 'T', mappings: {}, createdAt: '', updatedAt: '' });
 
             const wrapper = mountFormWithColumns({
                 templateId: 'tmpl-5',

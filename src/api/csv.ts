@@ -1,4 +1,4 @@
-import type { CsvImport, CsvUploadResponse, ResponseAPI, TemplateResponse } from '@/types/api.p';
+import type { CsvImport, CsvMappedResponse, CsvUploadResponse, ResponseAPI, TemplateResponse, TemplateSavePayload } from '@/types/api.p';
 import { http } from './http';
 
 export async function getImports(): Promise<CsvImport[]> {

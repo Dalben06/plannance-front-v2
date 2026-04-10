@@ -1,4 +1,4 @@
-import { getTemplates } from '@/api/csv';
+import { getTemplateById, getTemplates } from '@/api/csv';
 import type { TemplateResponse } from '@/types/api.p';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
@@ -18,5 +18,9 @@ export const useTemplateStore = defineStore('template', () => {
         }
     }
 
-    return { templates, isLoading, fetchTemplates };
+    async function fetchTemplateById(id: string): Promise<TemplateResponse> {
+        return getTemplateById(id);
+    }
+
+    return { templates, isLoading, fetchTemplates, fetchTemplateById };
 });

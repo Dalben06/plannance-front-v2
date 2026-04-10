@@ -51,12 +51,27 @@ export type TemplateResponse = {
     id: string;
     userId: string;
     name: string;
-    mapping: Record<string, string>;
+    mappings: TemplateMapItem[];
     createdAt: Date | string;
     updatedAt: Date | string;
+};
+
+export type TemplateMapItem = {
+    to: string;
+    from: string;
 };
 
 export type TemplateMapping = {
     from: string;
     to: string;
+};
+
+export type TemplateSavePayload = {
+    id?: string;
+    name: string;
+    mappings: TemplateMapping[];
+};
+
+export type CsvMappedResponse = {
+    columns: CsvColumnMapping[];
 };

@@ -35,7 +35,11 @@ function makeTemplateResponse(overrides: Partial<TemplateResponse> = {}): Templa
         id: 'template-1',
         userId: 'user-1',
         name: 'Bank Statement',
-        mapping: { Date: 'startAt', Amount: 'amount', Description: 'title' },
+        mappings: [
+            { from: 'Date', to: 'startAt' },
+            { from: 'Amount', to: 'amount' },
+            { from: 'Description', to: 'title' }
+        ],
         createdAt: '2026-01-01',
         updatedAt: '2026-01-01',
         ...overrides

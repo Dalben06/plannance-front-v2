@@ -1,9 +1,16 @@
 import TemplateForm from '@/components/template/TemplateForm.vue';
 import type { CsvColumnMapping } from '@/types/api.p';
 import { SelectStub } from '@tests/stubs';
-import { flushPromises, shallowMount } from '@vue/test-utils';
+import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { ComponentPublicInstance } from 'vue';
+
+type SelectInstance = ComponentPublicInstance & { $props: { options: string[]; modelValue: string } };
+
+function findSelect(wrapper: ReturnType<typeof mountForm>, testId: string): VueWrapper<SelectInstance> {
+    return wrapper.findComponent(`[data-testid="${testId}-select"]`) as VueWrapper<SelectInstance>;
+}
 
 const { mockSaveTemplate, mockUpdateTemplate, mockUploadCsvForMapping } = vi.hoisted(() => ({
     mockSaveTemplate: vi.fn(),
@@ -120,28 +127,28 @@ describe('TemplateForm', () => {
                 initialName: 'Test',
                 initialMappings: { startAt: 'Date', amount: 'Amount', title: 'Description' }
             });
-            expect(wrapper.findComponent('[data-testid="startAt-select"]').props('modelValue')).toBe('Date');
-            expect(wrapper.findComponent('[data-testid="amount-select"]').props('modelValue')).toBe('Amount');
-            expect(wrapper.findComponent('[data-testid="title-select"]').props('modelValue')).toBe('Description');
+            expect(findSelect(wrapper, 'startAt').props('modelValue')).toBe('Date');
+            expect(findSelect(wrapper, 'amount').props('modelValue')).toBe('Amount');
+            expect(findSelect(wrapper, 'title').props('modelValue')).toBe('Description');
         });
     });
 
     describe('type-filtered columns', () => {
         it('startAt select only shows date-type columns', () => {
             const wrapper = mountFormWithColumns();
-            const options = wrapper.findComponent('[data-testid="startAt-select"]').props('options') as string[];
+            const options = findSelect(wrapper, 'startAt').props('options');
             expect(options).toEqual(['Date']);
         });
 
         it('amount select only shows number-type columns', () => {
             const wrapper = mountFormWithColumns();
-            const options = wrapper.findComponent('[data-testid="amount-select"]').props('options') as string[];
+            const options = findSelect(wrapper, 'amount').props('options');
             expect(options).toEqual(['Amount']);
         });
 
         it('title select only shows string-type columns', () => {
             const wrapper = mountFormWithColumns();
-            const options = wrapper.findComponent('[data-testid="title-select"]').props('options') as string[];
+            const options = findSelect(wrapper, 'title').props('options');
             expect(options).toContain('Description');
             expect(options).toContain('Extra String');
             expect(options).not.toContain('Date');

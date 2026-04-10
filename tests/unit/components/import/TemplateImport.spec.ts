@@ -24,8 +24,8 @@ vi.mock('@/api/csv', () => ({
 }));
 
 const TEST_TEMPLATES: TemplateResponse[] = [
-    { id: 'tmpl-1', name: 'Bank Statement', userId: 'u', mapping: {}, createdAt: '', updatedAt: '' },
-    { id: 'tmpl-2', name: 'Salary', userId: 'u', mapping: {}, createdAt: '', updatedAt: '' }
+    { id: 'tmpl-1', name: 'Bank Statement', userId: 'u', mappings: [], createdAt: '', updatedAt: '' },
+    { id: 'tmpl-2', name: 'Salary', userId: 'u', mappings: [], createdAt: '', updatedAt: '' }
 ];
 
 describe('TemplateImport', () => {

@@ -35,7 +35,10 @@ function makeTemplateResponse(overrides: Partial<TemplateResponse> = {}): Templa
         id: 'template-1',
         userId: 'user-1',
         name: 'My Template',
-        mapping: { title: 'Title', amount: 'Amount' },
+        mappings: [
+            { from: 'Title', to: 'title' },
+            { from: 'Amount', to: 'amount' }
+        ],
         createdAt: '2026-04-01T10:00:00Z',
         updatedAt: '2026-04-01T10:00:00Z',
         ...overrides

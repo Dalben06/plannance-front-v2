@@ -1,3 +1,9 @@
+// Suppress console output during tests
+vi.spyOn(console, 'log').mockImplementation(() => {});
+vi.spyOn(console, 'warn').mockImplementation(() => {});
+vi.spyOn(console, 'error').mockImplementation(() => {});
+vi.spyOn(console, 'info').mockImplementation(() => {});
+
 // Polyfill matchMedia (JSDOM doesn't implement it)
 Object.defineProperty(window, 'matchMedia', {
     writable: true,

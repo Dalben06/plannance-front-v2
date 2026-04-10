@@ -60,7 +60,7 @@ export const MessageStub = {
 export const SelectStub = {
     props: ['options', 'modelValue', 'invalid', 'placeholder'],
     emits: ['update:modelValue'],
-    template: '<div></div>'
+    template: '<div v-bind="$attrs"></div>'
 };
 
 // ---------------------------------------------------------------------------
